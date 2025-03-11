@@ -1,0 +1,705 @@
+--- START OF FILE giocofunzionante_sabbie_mobili_exit_fixed.html ---
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Il Mistero della Piramide Perduta - Edizione Deluxe Risate Garantite</title>
+  <!-- Font tematici da Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+  <style>
+body {
+  background: linear-gradient(to bottom, #d2b48c, #a0522d); /* Sfondo desertico caldo */
+  color: #000000; /* Nero per il testo principale */
+  font-family: 'Noto Serif', serif; /* Font leggibile ed elegante */
+  font-size: 22px; /* Dimensione per una buona leggibilità */
+  line-height: 1.6; /* Spaziatura confortevole */
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenitore del gioco */
+#game-container {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #fff; /* Bianco per contrasto */
+  border: 3px solid #8b4513; /* Marrone rame per i bordi */
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Ombra leggera */
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+}
+
+/* Riquadro delle informazioni (descrizione + status) */
+#game-info {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f4e3c7; /* Papiro caldo */
+  border-bottom: 2px solid #b8860b; /* Oro scuro */
+}
+
+/* Descrizione della stanza */
+#game-description {
+  white-space: pre-wrap; /* Preserva spazi e ritorni a capo */
+  margin-bottom: 10px;
+}
+
+/* Status del gioco */
+#game-status {
+  color: #4a2c1a; /* Marrone scuro */
+  font-size: 20px; /* Dimensione leggibile */
+}
+
+/* Riquadro per l'input */
+#game-input-container {
+  padding: 10px;
+  background-color: #d9c2a7; /* Sabbia media */
+  border-top: 2px solid #b8860b; /* Oro scuro */
+  border-radius: 0 0 8px 8px;
+}
+
+#game-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Titolo della stanza */
+.room-title {
+  font-family: 'Cinzel Decorative', serif; /* Font egiziano e ornamentale */
+  font-size: 1.6em; /* Dimensione equilibrata */
+  font-weight: 700;
+  color: #a0522d; /* Marrone terracotta */
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px #b8860b; /* Ombra dorata */
+}
+
+/* Messaggi di sistema */
+.system-message {
+  font-style: italic;
+  color: #4a2c1a; /* Marrone scuro */
+  font-size: 20px; /* Dimensione leggibile */
+  margin-top: 5px;
+}
+
+/* Messaggi enigma */
+.enigma-message {
+  color: #d32f2f; /* Rosso per risalto */
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Schermata introduttiva */
+.intro {
+  font-size: 1.2em;
+  text-align: center;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  #game-container {
+    margin: 10px;
+    height: 90vh;
+  }
+  .room-title {
+    font-size: 1.4em; /* Ridotta per schermi piccoli */
+  }
+  body {
+    font-size: 20px; /* Ridotta per schermi piccoli */
+  }
+}
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="game-info">
+      <div id="game-description"></div>
+      <div id="game-status"></div>
+    </div>
+    <div id="game-input-container">
+      <input type="text" id="game-input" placeholder="Inserisci comando..." autofocus autocomplete="off">
+    </div>
+  </div>
+
+  <script>
+    /***** Stato di gioco *****/
+    const gameState = {
+      currentRoom: 0, // 0 = schermata introduttiva
+      lives: 3,
+      inventory: [],
+      errorOccurred: false
+    };
+
+    /***** Array per i messaggi dello status (max 3) *****/
+    let statusMessages = [];
+    function updateStatusPanel() {
+      const statusDiv = document.getElementById("game-status");
+      statusDiv.innerHTML = statusMessages.map(msg => `<div>${msg}</div>`).join("");
+    }
+    function addStatus(message, className = "") {
+      let fullMsg = className ? `<span class="${className}">${message}</span>` : message;
+      statusMessages.push(fullMsg);
+      if (statusMessages.length > 3) statusMessages.shift();
+      updateStatusPanel();
+    }
+    function clearStatus() {
+      statusMessages = [];
+      updateStatusPanel();
+    }
+
+    /***** Dizionario dei sinonimi per i verbi *****/
+    const verbSynonyms = {
+      "premi": ["premi", "spingi", "schiaccia", "pigia", "schiacciabottoni"],
+      "usa": ["usa", "utilizza", "adopera", "sfrutta"],
+      "lancia": ["lancia", "usa", "scaglia", "tira", "scaraventa"],
+      "getta": ["getta", "lancia", "butta", "molla"],
+      "leggi": ["leggi", "sfoglia", "decifra", "interpreta"],
+      "gira": ["gira", "ruota", "torci", "manovra"],
+      "rispondo": ["rispondo", "dico", "ribatto", "replico"],
+      "apri": ["apri", "spalanca", "dischiudi", "scoperchia"],
+      "esamina": ["esamina", "osserva", "scruta", "ispeziona", "analizza", "studia"],
+      "rompi": ["rompi", "frantuma", "distruggi", "spacca"] // Nuovo sinonimo per "rompi"
+    };
+
+    /***** Confronto flessibile dei comandi *****/
+    function flexibleMatch(expected, input) {
+      let expWords = expected.trim().toLowerCase().split(" ");
+      let inpWords = input.trim().toLowerCase().split(" ");
+      if (expWords.length === 1 && inpWords.length === 1) {
+        return expWords[0] === inpWords[0] ? 1 : -1;
+      }
+      if (expWords.length !== inpWords.length) return -1;
+      if (expWords.length !== inpWords.length) return -1;
+      let expectedVerb = expWords[0];
+      let inputVerb = inpWords[0];
+      if (!verbSynonyms[expectedVerb]) return expectedVerb === inputVerb ? 1 : 0;
+      return verbSynonyms[expectedVerb].includes(inputVerb) ? 1 : 0;
+    }
+    function flexibleMatchSingle(expected, input) {
+      if (Array.isArray(expected)) {
+        let nonPenalizingFound = false;
+        for (let exp of expected) {
+          let res = flexibleMatch(exp, input);
+          if (res === 1) return 1;
+          if (res === 0) nonPenalizingFound = true;
+        }
+        return nonPenalizingFound ? 0 : -1;
+      } else {
+        return flexibleMatch(expected, input);
+      }
+    }
+
+    /***** Definizione completa delle stanze *****/
+    const rooms = {
+      1: {
+        id: 1,
+        title: "L'INGRESSO - Benvenuti al vostro incubo egizio!",
+        description: `Vi ritrovate in una minuscola anticamera quadrata, più claustrofobica di un vagone della metro all'ora di punta. Le pareti? Un tripudio di geroglifici sbiaditi che narrano le gesta di un faraone talmente sfigato che pure i cammelli lo prendevano in giro.
+
+La fioca luce che filtra dall'ingresso, ormai sigillato dalla sabbia come una busta di patatine aperta male, sta svanendo alla velocità della vostra sanità mentale. Le speranze di rivedere la nuova stagione della vostra serie preferita si affievoliscono di secondo in secondo.
+
+Per fortuna, sul pavimento troneggia una torcia. Probabilmente l'ha persa qualcuno con meno pazienza di voi (e ce ne vuole parecchia, fidatevi).
+A sud, una porta decorata con uno scarabeo che vi lancia un'occhiataccia e sembra sussurrare: "Benvenuti nella trappola per turisti, polli!".`,
+        items: ["torcia"],
+        puzzle: null,
+        exits: { sud: 2 },
+        lockedExits: {}
+      },
+      2: {
+        id: 2,
+        title: "LA CAMERA DEI SIMBOLI - Premi i bottoni giusti o fai la fine della mummia!",
+        description: `Con la torcia che finalmente fa luce (era ora!), la stanza rivela dettagli decisamente poco rassicuranti. Sulla parete occhieggiano tre simboli giganti, scolpiti nella pietra con la delicatezza di un elefante in una cristalleria: un falco, uno scarabeo e un serpente. La porta a est è sbarrata da un meccanismo più arrugginito delle vostre ginocchia dopo una maratona sul divano.
+
+In un angolo, una corda arrotolata che sembra appena uscita da un film western di serie B e uno specchio dorato appeso al muro, perfetto per controllare se il vostro cappello da esploratore è ancora trendy (spoiler: no).`,
+        items: ["corda", "specchio"],
+        puzzle: {
+          type: "sequence",
+          commands: ["premi falco", "premi serpente", "premi scarabeo"],
+          progress: 0,
+          hint: "Suggerimento: Gli antichi Egizi avevano una passione per l'ordine... pensa a chi vola alto, chi striscia basso, e chi sta nel mezzo.",
+          solved: false,
+          customSuccess: "Un rumore di ingranaggi arrugginiti riempie la stanza. La porta a est vibra, poi si apre con un cigolio che sveglierebbe anche un faraone millenario.  Avete sbloccato il passaggio!  Ora, pronti per la prossima sfida?" ,
+          successDescription: "Con la sequenza corretta, i simboli si illuminano brevemente di una luce verdognola.  Un meccanismo arrugginito si attiva con un rumore di ferraglia, e la porta a est, con un sussulto, si sblocca, aprendosi quel tanto che basta per farvi passare.  Non esattamente un'apertura trionfale, ma ehi, funziona!"
+        },
+        exits: { est: 3, ovest: 1 }, // Corretto: aggiunta uscita OVEST verso stanza 1 (INGRESSO) -  ERRORE! deve essere verso stanza 1, non stanza 3
+        lockedExits: { est: true }
+      },
+      3: {
+        id: 3,
+        title: "LE SABBIE MOBILI - La fuga è appesa a un filo... di corda!",
+        description: `Appena mettete piede nella stanza, il terreno scompare sotto i vostri piedi! **Sabbie mobili!**  State affondando rapidamente, risucchiati da questa trappola insidiosa come un panino nel buco nero della fame di mezzanotte.  La sabbia vi stringe già le gambe, facendovi seriamente dubitare della sanità mentale di chi ha progettato questa piramide.
+
+Non c'è nulla a cui aggrapparsi, solo sabbia viscida e implacabile che vi inghiotte centimetro dopo centimetro.  La **corda** che avete trovato nella stanza precedente è **essenziale** per uscire da questa situazione appiccicosa.  Usatela con saggezza se volete raggiungere la porta a nord, altrimenti diventerete parte dell'arredamento (funebre) di questa stanza.`, // Descrizione RIVISTA per essere più diretta
+        items: [],
+        puzzle: {
+          type: "single",
+          command: ["usa corda", "lancia corda"],
+          hint: "Suggerimento:  Siete nei guai fino al collo (di sabbia).  Avete raccolto una corda nella stanza dei simboli.  Quella corda è la vostra unica speranza. Usatela!", // Hint RIVISTO per essere più diretto
+          solved: false,
+          successDescription: "Con un ultimo sforzo disperato, lanciate la corda verso l'alto, sperando in un miracolo (o almeno in un appiglio).  E il miracolo accade!  La corda si avvolge saldamente attorno a una trave di legno nascosta nell'ombra del soffitto.  Stringendo i denti e aggrappandovi alla corda come se fosse l'ultimo biglietto per l'ascensore che porta fuori dall'inferno, vi tirate fuori dalle sabbie mobili, esausti ma vittoriosi.  La porta a nord è ora libera, e voi...  beh, voi avete decisamente bisogno di una doccia (e forse di un terapista).",
+          requiresItem: "corda",
+          removeItem: true
+        },
+        exits: { nord: 4, sud: 2 }, // Corretto: aggiunta uscita SUD verso stanza 2 (CAMERA DEI SIMBOLI)
+        lockedExits: { nord: true }
+      },
+      4: {
+        id: 4,
+        title: "LA CAMERA DEGLI SPECCHI - Narciso scansati!",
+        description: `Vi ritrovate in una stanza circolare tappezzata di specchi antichi, più deformanti di una sala giochi abbandonata. La vostra immagine si moltiplica all'infinito, rivelando impietosamente ogni rotolino sospetto. Quella che credevate fosse una "pancetta da contemplazione" ora sembra una "pancia da parto gemellare".
+
+Al centro, un piedistallo con un'incisione misteriosa aspetta qualcosa di riflettente. Forse il vostro ego? Una porta a sud è aperta, un invito a fuggire da questo incubo di vanità, mentre quella a ovest è bloccata da un raggio di luce più fastidioso di una zanzara in piena notte.`,
+        items: [],
+        puzzle: {
+          type: "single",
+          command: "usa specchio",
+          hint: "Suggerimento:  Quel raggio di luce vi infastidisce, vero?  E avete appena raccolto uno specchio...  Forse è il caso di farli conoscere meglio?",
+          solved: false,
+          successDescription: "Brandendo lo specchio come un riflettore da concerto, intercettate il raggio di luce e lo deviate con precisione chirurgica.  Il fascio luminoso colpisce un punto imprecisato sul muro ovest.  Si sente un 'click' sordo, come di un chiavistello che si sblocca.  La porta ovest non è più bloccata!  Complimenti, avete appena fatto i DJ della luce in una piramide!",
+          requiresItem: "specchio",
+          removeItem: true
+        },
+        exits: { sud: 3, ovest: 5 },
+        lockedExits: { ovest: true }
+      },
+      5: {
+        id: 5,
+        title: "IL POZZO DEI DESIDERI - Lanciate una monetina e sperate nella clemenza degli dei (e nel Wi-Fi)",
+        description: `Vi trovate di fronte a un pozzo antico dalle acque cristalline, così limpide che ci si potrebbe specchiare (se non foste già traumatizzati dagli specchi della stanza precedente). Sul bordo, un'iscrizione enigmatica recita: "Ciò che dai, riceverai - a meno che non sia una moneta falsa, in quel caso la maledizione si attiverà e vi cresceranno le orecchie d'asino".
+
+Una monetina d'oro luccica in una nicchia, invitante come una patatina sul fondo del sacchetto. Le uscite? A est, se volete tornare nella stanza degli specchi a torturarvi ancora un po', e a nord, se siete abbastanza coraggiosi da proseguire.`,
+        items: ["moneta"],
+        puzzle: {
+          type: "single",
+          command: ["lancia moneta", "getta moneta"],
+          hint: "Suggerimento:  Avete una moneta d'oro, un pozzo dei desideri...  Non vi viene in mente proprio NIENTE da fare?  Tipo, un classico gesto da 'fontana di Trevi', ma in versione egizia?",
+          solved: false,
+          reward: "amuleto",
+          successDescription: "Con un gesto teatrale (perché in fondo siete anche un po' divi), lanciate la monetina nel pozzo.  L'acqua increspata per un attimo, poi...  un bagliore dorato emerge dalle profondità!  Un amuleto finemente lavorato, raffigurante Anubis, fluttua magicamente verso la superficie e si posa delicatamente sul bordo del pozzo, come fosse stato recapitato da un drone divino.  Che fortuna!",
+          requiresItem: "moneta",
+          removeItem: true
+        },
+        exits: { est: 4, nord: 6 },
+        lockedExits: { nord: true }
+      },
+      6: {
+        id: 6,
+        title: "IL CORRIDOIO DELLE FRECCE -  Quiz a premi... o a frecce! ",
+        description: `Vi ritrovate in un corridoio lungo e stretto, più inquietante di un vicolo buio a mezzanotte. Il soffitto è un colabrodo di fori minacciosi. Dal pavimento spuntano colonnine decorate con simboli di animali egizi, carini, se non fosse che sembrano puntarvi il dito accusandovi di essere lì.
+
+Una voce spettrale (ma un po' roca, forse ha la laringite) tuona: "Rispondi all'indovinello, o le frecce pioveranno come grandine in agosto! Sono antico come il tempo, ma ogni mese rinasco. Chi sono, sacco di pulci?"
+
+Il pavimento è disseminato di frecce conficcate, prova tangibile che qui non si scherza. In un angolo, uno scheletro indossa una maglietta souvenir "I ♥ Piramidi" - evidentemente non era abbastanza innamorato da risolvere l'indovinello.  Una porta a nord vi aspetta, sperando che siate più brillanti dello scheletro, mentre una a sud vi riporta indietro, se avete già perso le speranze.`,
+        items: [],
+        puzzle: {
+          type: "single",
+          command: ["rispondo luna", "luna"],
+          hint: "Suggerimento:  L'indovinello parla di qualcosa di 'antico' e che 'rinasce ogni mese'.  Pensate al cielo notturno... cosa c'è lassù che cambia forma regolarmente?",
+          solved: false,
+          reward: "scettro",
+          successDescription: "Con voce tremante ma decisa, urlate la risposta: 'LUNA!'.  Un silenzio tombale cala nel corridoio, seguito da un rumore sordo di meccanismi che si ritraggono.  Le colonne decorate ruotano su sé stesse, rivelando degli incavi al loro interno... e da uno di questi incavi, magicamente, emerge uno scettro d'oro massiccio, scintillante come un trofeo appena lucidato!  Sembra che abbiate superato l'esame... per ora."
+        },
+        exits: { sud: 5, nord: 7 },
+        lockedExits: { nord: true }
+      },
+      7: {
+        id: 7,
+        title: "LA BIBLIOTECA PERDUTA -  Indovina indovinello, apri il cancelletto!",
+        description: `Vi ritrovate nella Biblioteca Perduta, ma più che libri sembra di essere in un deposito di carta da macero.  Scaffali fatiscenti grondano papiri e tavolette polverose, la maggior parte illeggibili come la grafia del vostro medico.  Tra le pile di rotoli sbiaditi, però, spicca un grande libro aperto sul tavolo di pietra al centro della stanza.
+
+Avvicinandovi, notate che non è il solito manuale "Come scappare dalle piramidi per principianti, volume 3", ma un tomo antico rilegato in pelle, con una pagina ingiallita ben in vista.  Sullo scaffale, in disparte, notate anche una piccola **anfora** di terracotta, diversa dalle altre, come se non appartenesse a questa collezione disordinata.
+
+Sulla pagina del libro è vergato un **indovinello**:
+
+"Sono muto, ma racconto storie infinite.
+Non ho corpo, ma viaggio nel tempo e nello spazio.
+Apro mondi senza chiave, e chiudo ere con un sospiro.
+
+Cosa sono?"
+
+Le uscite? A sud, se preferite tornare al caos del Corridoio delle Frecce, e a est, se pensate di avere la risposta all'indovinello e volete tentare la fortuna.`,
+        items: ["anfora"], // L'anfora è presente nella stanza
+        puzzle: {
+          type: "sequence",
+          commands: [
+            "rispondo libro", "libro",
+            "rompi anfora" // Nuovo comando nella sequenza
+          ],
+          progress: 0,
+          hint: "Suggerimento: L'indovinello descrive qualcosa che 'racconta storie', 'viaggia nel tempo e nello spazio' e 'apre mondi'.  In questa stanza siete circondati da... cosa?  Avete notato quell'anfora diversa dalle altre?",
+          solved: false,
+          reward: "chiave egizia", // La ricompensa ora è la chiave egizia
+          customSuccess: [ // Descrizione personalizzata per il successo del puzzle
+            "Appena pronunciate la risposta all'indovinello - 'LIBRO!' -  una luce soffusa emana dal libro aperto sul tavolo.  Le pagine iniziano a sfogliarsi da sole, vorticosamente, fino a fermarsi su una pagina bianca, apparentemente vuota.  Poi, lentamente, delle parole iniziano a materializzarsi sulla pagina, come inchiostro invisibile che si rivela: 'CERCA LA CHIAVE!'.",
+            "Seguendo il consiglio del libro magico, notate l'anfora defilata sullo scaffale.  Sembra diversa dalle altre...",
+            "Con un gesto deciso, **rompete l'anfora**.  Frammenti di terracotta volano ovunque, e tra i cocci, ecco brillare una **chiave egizia** finemente lavorata!  L'avete raccolta!" ,
+            "Contemporaneamente, il muro est vibra, e una sezione di parete si sposta lateralmente, rivelando un'apertura buia.  Il libro e l'anfora vi hanno aperto una nuova via!  Evidentemente, la conoscenza e un po' di forza bruta sono un'ottima combinazione..."
+          ],
+          successDescription: null // successDescription standard non più usato, ora c'è customSuccess
+        },
+        exits: { sud: 6, est: 8 },
+        lockedExits: { est: true }
+      },
+      8: {
+        id: 8,
+        title: "LA CAMERA DELLE STATUE -  Divinità scontente cercano scettro disperatamente",
+        description: `Vi ritrovate circondati da quattro statue imponenti di divinità egizie, più imbronciate di un gatto a cui avete rubato il posto sul divano. Riconoscete Ra, Osiride, Iside e Seth, tutti con espressioni che urlano "Ci hanno tagliato i fondi per l'immortalità!".  Sembrano usciti da una riunione di condominio particolarmente litigiosa.
+
+Alla statua di Osiride manca lo scettro.  Al suo posto, un cartello in geroglifici recita: "Oggetto temporaneamente rimosso per manutenzione. O forse rubato. Probabilmente rubato. Sì, decisamente rubato.  Se lo ritrovate, siete pregati di restituirlo. Grazie, la Direzione (divina, ovviamente)".
+
+Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i papiri del pane alla birra, e a nord, se avete intenzione di trovarlo in questa stanza (spoiler: non c'è).`,
+        items: [],
+        puzzle: {
+          type: "single",
+          command: "usa scettro",
+          hint: "Suggerimento:  Osservate attentamente le statue...  A chi manca qualcosa di importante?  E voi, per caso, avete in inventario un certo 'scettro'?",
+          solved: false,
+          successDescription: "Avvicinandovi alla statua di Osiride, notate la cavità vuota nella sua mano.  Esitando un attimo (non si sa mai se le statue mordono), inserite lo scettro nella mano della divinità.  Un lampo di luce dorata emana dalla statua, che sembra rilassarsi leggermente, come dopo un massaggio decontratturante.  Un sonoro 'click' proviene dal muro nord, e la porta bloccata si spalanca con un'aria quasi sollevata.  Osiride vi ringrazia... a modo suo, ovviamente.",
+          requiresItem: "scettro",
+          removeItem: true // Lo scettro viene rimosso dopo l'uso
+        },
+        exits: { ovest: 7, nord: 9 },
+        lockedExits: { nord: true }
+      },
+      9: {
+        id: 9,
+        title: "LA CAMERA DEL GIUDIZIO -  Anubi cerca stagista per pesatura anime (part-time)",
+        description: `Siete entrati nella maestosa Camera del Giudizio.  Al centro, una grande bilancia dorata domina la scena. Anubi, in statua, osserva severo. Un cartello: "Vietato toccare la bilancia...".  Una voce risuona: 'Prima di pesare, risolvi il mio enigma, mortale!': 'Sono custode silenzioso, misuro senza toccare, decido il valore, ma non posso giudicare. Cosa sono?' Le uscite? A sud, per tornare dalle statue, e nord, ancora sbarrata.`,
+        items: [],
+        puzzle: {
+          type: "sequence",
+          commands: [
+            function(cmd) {
+              return (cmd === "rispondo bilancia" || cmd === "rispondo balance" || cmd === "bilancia" || cmd === "balance");
+            },
+            "pesa amuleto"
+          ],
+          progress: 0,
+          hint: "Suggerimento: L'enigma parla di qualcosa che 'misura senza toccare' e 'decide il valore'.  Guardatevi intorno in questa stanza... cosa potrebbe essere?",
+          solved: false,
+          successDescription: "Appena pronunciate la risposta all'enigma - 'BILANCIA!' -  la voce spettrale tace.  Sembra che Anubi sia soddisfatto della vostra risposta.  Ora potete avvicinarvi alla bilancia e fare ciò che è necessario.",
+          requiresItem: "amuleto",
+          removeItem: true
+        },
+        exits: { sud: 8, nord: 10 },
+        lockedExits: { nord: true }
+      },
+      10: {
+        id: 10,
+        title: "LA TOMBA DEL FARAONE SMEMORATO -  Il tesoro... o la maledizione? Fate il vostro gioco!",
+        description: `Finalmente! Siete giunti alla leggendaria tomba del faraone Amenhotep Lo Smemorato.
+
+Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ciò che resta quando tutto è perduto, l'ultimo respiro prima del silenzio eterno. Cosa sono?'.  Accanto, una statua di Anubis con cavità nel petto.  Non ci sono porte visibili, a parte quella a sud.`,
+        items: [],
+        puzzle: {
+          type: "sequence",
+          commands: [
+            function(cmd) {
+              return (cmd === "rispondo ombra" || cmd === "rispondo memoria" || cmd === "ombra" || cmd === "memoria");
+            },
+            "apri sarcofago",
+            function(cmd) {
+              return (cmd === "rispondo uscita" || cmd === "rispondo passaggio" || cmd === "rispondo libertà" || cmd === "uscita" || cmd === "passaggio" || cmd === "libertà");
+            },
+            "usa chiave egizia" // Comando finale modificato: usa chiave egizia
+          ],
+          progress: 0,
+          hint: "Suggerimento:  L'enigma parla di 'ciò che resta quando tutto è perduto' e 'l'ultimo respiro prima del silenzio'.  Cosa svanisce con la luce?  Forse la chiave per l'uscita non è lo scettro...",
+          solved: false,
+          successDescription: [
+            "Appena pronunciate la risposta all'enigma - 'OMBRA!' -  la stanza vibra.  Con rumore sinistro, il sarcofago dorato si apre lentamente, rivelando una cavità interna.",
+            "Una nuova scritta appare magicamente sul sarcofago aperto: 'Ora che hai svelato il mio primo segreto, risolvi questo per la vera libertà: Non sono porta, ma conduco via, non sono finestra, ma dono luce nuova.  Sono l'assenza di muri, la fine del cammino. Cosa sono?'",
+            "Con la risposta al secondo enigma - 'USCITA!' -  un raggio di luce verde smeraldo si proietta dal sarcofago verso il muro nord, illuminando un punto.",
+            "Prendete la **chiave egizia** dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...", // Modificato per suggerire l'uso della chiave
+            "Inserite la chiave egizia nella cavità nel petto della statua di Anubis.  Un boato sordo, e una sezione del muro scorre lateralmente, rivelando un passaggio segreto!"
+          ],
+          requiresItem: "chiave egizia", // Richiede la chiave egizia ora
+          removeItem: true // La chiave egizia viene rimossa dopo l'uso
+        },
+        exits: { sud: 9, passaggio: "win" },
+        lockedExits: { passaggio: true }
+      }
+    };
+
+    /***** Funzioni per aggiornare la descrizione e il cambio stanza *****/
+    function setDescription(htmlContent) {
+      document.getElementById("game-description").innerHTML = htmlContent;
+    }
+    function showCurrentRoom() {
+      const room = rooms[gameState.currentRoom];
+      let titleHtml = `<div class="room-title">${room.title}</div>`;
+      setDescription(titleHtml + "<div>" + room.description + "</div>" +
+        `<div class="system-message">Vite rimaste: ${gameState.lives} (non sprecatele!) | Inventario: ${gameState.inventory.join(", ") || "vuoto come il vostro portafoglio dopo i saldi"}</div>`);
+      clearStatus();
+    }
+    function goToRoom(roomId) {
+      gameState.currentRoom = roomId;
+      gameState.errorOccurred = false;
+      showCurrentRoom();
+    }
+
+    /***** Gestione degli errori *****/
+    function handleError(hint) {
+      gameState.lives--;
+      addStatus("Mossa sbagliata! Avete perso una vita.", "system-message");
+      if (!gameState.errorOccurred && hint) {
+        addStatus("Suggerimento: " + hint, "system-message");
+        gameState.errorOccurred = true;
+      }
+      if (gameState.lives <= 0) gameOver();
+    }
+    function gameOver() {
+      addStatus("GAME OVER - Avete esaurito le vite!  Probabilmente nella vita reale siete più bravi.", "system-message");
+      addStatus("Volete riprovare? (S/N)  Oppure preferite andare a piangere in un angolo?", "system-message");
+      gameState.currentRoom = "gameover";
+    }
+    function winGame() {
+      addStatus("CONGRATULAZIONI! Avete completato il Mistero della Piramide Perduta con " + gameState.lives + " vite rimaste!  Siete dei veri Indiana Jones (o quasi).", "system-message");
+      addStatus("Volete rigiocare? (S/N)  Attenti che la fortuna non dura per sempre!", "system-message");
+      gameState.currentRoom = "gameover";
+    }
+
+    /***** Gestione del comando per prendere un oggetto *****/
+    function handleItemPickup(command) {
+      let itemPart = command.slice(7).trim();
+      if (itemPart.split(" ").length !== 1) {
+        addStatus("Per prendere un oggetto usate due parole, tipo 'prendi torcia'.  Non fate i pantomimi.", "system-message");
+        return;
+      }
+      const room = rooms[gameState.currentRoom];
+      if (room.items && room.items.includes(itemPart)) {
+        if (!gameState.inventory.includes(itemPart)) {
+          gameState.inventory.push(itemPart);
+          addStatus(`Avete preso: ${itemPart}.  Ottima scelta, non si sa mai cosa può servire.`, "system-message");
+        } else {
+          addStatus(`Avete già preso ${itemPart}.  Siete sicuri di non avere la memoria del faraone smemorato?`, "system-message");
+        }
+        room.items = room.items.filter(i => i !== itemPart);
+      } else {
+        addStatus("Non c'è quell'oggetto qui.  Forse avete bisogno di occhiali nuovi?", "system-message");
+      }
+    }
+
+    /***** Rimuove un oggetto dall'inventario *****/
+    function removeFromInventory(item) {
+      gameState.inventory = gameState.inventory.filter(i => i !== item);
+    }
+
+    /***** Gestione dei comandi puzzle *****/
+    function processPuzzleCommand(room, command) {
+      if (!room.puzzle || room.puzzle.solved) return false;
+      if (room.puzzle.type === "single") {
+        if (room.puzzle.requiresItem) {
+          const requiredItem = room.puzzle.requiresItem;
+          if (!gameState.inventory.includes(requiredItem)) {
+            addStatus(`Non avete un ${requiredItem} nel vostro inventario. Forse dovreste cercarlo?`, "system-message");
+            return true;
+          }
+        }
+
+        let result = flexibleMatchSingle(room.puzzle.command, command);
+        if (result === 1) {
+          if (room.puzzle.removeItem) {
+             if (room.puzzle.requiresItem) {
+                removeFromInventory(room.puzzle.requiresItem);
+             }
+          }
+          room.puzzle.solved = true;
+          if (gameState.currentRoom === 2 && room.puzzle.customSuccess) {
+            addStatus(room.puzzle.customSuccess, "enigma-message");
+          } else {
+            addStatus("Enigma risolto!  Il vostro QI è appena salito di qualche punto (forse).", "system-message");
+          }
+          if (room.puzzle.reward && !gameState.inventory.includes(room.puzzle.reward)) {
+            gameState.inventory.push(room.puzzle.reward);
+            addStatus(`Avete ottenuto: ${room.puzzle.reward}.  Mettetelo via, che non si sa mai cosa può servire.`, "system-message");
+          }
+          for (let dir in room.lockedExits) room.lockedExits[dir] = false;
+          if (room.puzzle.successDescription || room.puzzle.customSuccess) {
+             let descriptions = room.puzzle.successDescription || room.puzzle.customSuccess;
+             if (Array.isArray(descriptions)) {
+                descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+             } else {
+                addStatus(descriptions, "enigma-message");
+             }
+          }
+          return true;
+        } else if (result === 0) {
+          addStatus("Non conosco il comando.  Forse dovete parlare in egizio antico?", "system-message");
+          return true;
+        } else {
+          if (room.puzzle.type === "sequence") {
+            addStatus("Sequenza interrotta! Ricominciate dall'inizio. Avete perso una vita perché avete sbagliato l'ordine.", "system-message");
+          } else {
+            handleError(room.puzzle.hint);
+          }
+          handleError(room.puzzle.hint);
+          return true;
+        }
+      } else if (room.puzzle.type === "sequence") {
+        let expected = room.puzzle.commands[room.puzzle.progress];
+        let result = flexibleMatchSingle(expected, command);
+        if (result === 1) {
+          if (gameState.currentRoom === 3 && command.includes("corda")) removeFromInventory("corda"); // Quelli specifici per stanza rimangono, per compatibilità - ma ora c'è il sistema più generale sopra
+          if (gameState.currentRoom === 4 && command.includes("specchio")) removeFromInventory("specchio");
+          if (gameState.currentRoom === 5 && command.includes("moneta")) removeFromInventory("moneta");
+          if (gameState.currentRoom === 9 && command.includes("amuleto")) removeFromInventory("amuleto");
+          if (gameState.currentRoom === 10 && command.includes("chiave egizia")) removeFromInventory("chiave egizia"); // Corretto: rimuove chiave egizia
+          if (gameState.currentRoom === 7 && room.puzzle.progress === 1 && command.includes("rompi anfora")) { // Se si rompe l'anfora nella stanza 7
+             const room7 = rooms[7];
+             if (room7.items && room7.items.includes("anfora")) {
+                room7.items = room7.items.filter(item => item !== "anfora"); // Rimuove l'anfora dalla stanza
+             }
+          }
+
+
+          room.puzzle.progress++;
+          if (room.puzzle.progress === room.puzzle.commands.length) {
+            room.puzzle.solved = true;
+            if (gameState.currentRoom === 2 && room.puzzle.customSuccess) {
+              addStatus(room.puzzle.customSuccess, "enigma-message");
+            } else {
+              addStatus("Enigma risolto!  Siete sulla buona strada per diventare un eroe (o quasi).", "system-message");
+            }
+            if (room.puzzle.reward && !gameState.inventory.includes(room.puzzle.reward)) {
+              gameState.inventory.push(room.puzzle.reward);
+              addStatus(`Avete ottenuto: ${room.puzzle.reward}.  Collezionateli tutti! (No, non proprio).`, "system-message");
+            }
+            for (let dir in room.lockedExits) room.lockedExits[dir] = false;
+            if (room.puzzle.successDescription || room.puzzle.customSuccess) {
+              let descriptions = room.puzzle.successDescription || room.puzzle.customSuccess;
+              if (Array.isArray(descriptions)) {
+                 descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+              } else {
+                 addStatus(descriptions, "enigma-message");
+              }
+            }
+          } else {
+            addStatus("Comando accettato.  Continuate così, siete quasi arrivati alla fine... della sequenza, almeno.", "system-message");
+          }
+          return true;
+        } else if (result === 0) {
+          addStatus("Non conosco il comando.  Riformulate la domanda, magari?", "system-message");
+          return true;
+        } else {
+          room.puzzle.progress = 0;
+          addStatus("Sequenza interrotta! Ricominciate dall'inizio. Avete perso una vita perché avete sbagliato l'ordine.", "system-message");
+          handleError(room.puzzle.hint);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /***** Gestione del movimento *****/
+    function handleMovement(direction) {
+      const room = rooms[gameState.currentRoom];
+      if (!room.exits.hasOwnProperty(direction)) {
+        addStatus("Non c'è nessuna uscita in quella direzione.  Forse avete il GPS rotto?", "system-message");
+        return;
+      }
+      if (room.lockedExits[direction] === true) {
+        addStatus("Non potete passare di là finché non risolvete l'enigma.  La pazienza è la virtù dei faraoni... e dei giocatori di avventure testuali.", "system-message");
+        return;
+      }
+      if (room.exits[direction] === "win") {
+        winGame();
+      } else {
+        goToRoom(room.exits[direction]);
+      }
+    }
+
+    /***** Processa il comando dell'utente *****/
+    function processCommand(input) {
+      const command = input.trim().toLowerCase();
+      if (gameState.currentRoom === 0) {
+        goToRoom(1);
+        return;
+      }
+      if (gameState.currentRoom === "gameover") {
+        if (command === "s") {
+          restartGame();
+        } else if (command === "n") {
+          addStatus("Grazie per aver giocato!  Tornate presto...  se vi va, eh.", "system-message");
+          document.getElementById("game-input").disabled = true;
+        } else {
+          addStatus("Inserite S per riprovare o N per uscire.  Non fate i difficili.", "system-message");
+        }
+        return;
+      }
+      if (["nord", "sud", "est", "ovest", "passaggio"].includes(command)) {
+        handleMovement(command);
+        return;
+      }
+      if (command.startsWith("prendi ")) {
+        handleItemPickup(command);
+        return;
+      }
+      const room = rooms[gameState.currentRoom];
+      if (room.puzzle && !room.puzzle.solved) {
+        if (processPuzzleCommand(room, command)) return;
+      }
+      addStatus("Comando non riconosciuto.  Forse volevate dire 'apriti sesamo'?  No, qui non funziona.", "system-message");
+    }
+
+    function restartGame() {
+      gameState.currentRoom = 1;
+      gameState.lives = 3;
+      gameState.inventory = [];
+      gameState.errorOccurred = false;
+      for (let id in rooms) {
+        const room = rooms[id];
+        if (room.puzzle) {
+          room.puzzle.solved = false;
+          if (room.puzzle.type === "sequence") room.puzzle.progress = 0;
+        }
+      }
+      showCurrentRoom();
+    }
+
+    /***** Gestione dell'input *****/
+    document.getElementById("game-input").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        const inputField = document.getElementById("game-input");
+        let inputText = inputField.value;
+        addStatus("> " + inputText);
+        processCommand(inputText);
+        inputField.value = "";
+      }
+    });
+
+    /***** Schermata introduttiva completa *****/
+    function showIntro() {
+      const introText = `IL MISTERO DELLA PIRAMIDE PERDUTA - Edizione Deluxe Risate Garantite!
+
+Benvenuti, aspiranti archeologi da strapazzo! Avete vinto un viaggio premio (si fa per dire) in Egitto, partecipando al famigerato concorso radiofonico "Piramidi & Panini", l'unico programma che va in onda alle 4 del mattino e che, realisticamente, ascoltano solo i vostri gatti.
+
+"Congratulazioni!" vi ha gracchiato il conduttore con un entusiasmo contagioso come la peste bubbonica, "Avete vinto un soggiorno all-inclusive (nel senso che vi includiamo nella piramide) alla ricerca della leggendaria Piramide Perduta di Amenhotep Lo Smemorato, un faraone talmente anonimo che persino Google vi direbbe 'Nessun risultato trovato'.  Buona fortuna (ne avrete bisogno)!".
+
+Dopo un volo degno di un film catastrofico, con scali in posti che non sapevate esistessero, la vostra guida, un tipo losco con una maglietta che diceva "MI CHIAMO ABDUL, FORSE... e forse no", vi ha mollato in mezzo al deserto con la scusa di "vado a prendere le sigarette".  Sono passate SEI ORE.  Abdul non fuma poi così tanto, vero?
+
+Mentre vagavate nel deserto più persi di un turista a Ferragosto, una tempesta di sabbia improvvisa vi ha travolto come un TIR lanciato a tutta velocità.  Cercando disperatamente un riparo, siete inciampati in un buco nella roccia, rotolando dentro con l'eleganza di un sacco di patate.
+
+Prima che poteste dire "Ma io volevo solo fare un giro in cammello!", la sabbia ha sigillato l'ingresso dietro di voi, accompagnata dal rumore di una risata malefica che sembrava registrata da un disco dei Village People al contrario.
+
+Ora siete intrappolati in questa piramide più antica del vostro contratto di affitto, con una sola missione: trovare una via d'uscita e, magari, un tesoretto da sbandierare ai vostri colleghi invidiosi, quelli che vi prendono in giro per il vostro cappello da esploratore "vintage" (che in realtà avete comprato ai mercatini dell'usato).
+
+ATTENZIONE, avventurieri sgangherati! Avete solo 3 vite per cavarvela.  Non sprecatele come fossero punti della spesa, altrimenti finirete mummificati peggio dell'ultimo vincitore del concorso radiofonico (che ora fa il manichino in un museo egizio, storia vera!).
+
+Premete un tasto qualsiasi (ma che sia un tasto vero, non il mouse!) per iniziare questa avventura tragicomica...  A vostro rischio e pericolo, ovviamente!`;
+      setDescription(`<div class="intro">${introText}</div>`);
+      clearStatus();
+    }
+
+    /***** Avvio del gioco *****/
+    showIntro();
+  </script>
+</body>
+</html>
