@@ -138,7 +138,8 @@ body {
       libraryRiddleSolved: false, // Stato per l'indovinello della biblioteca
       tombRiddle1Solved: false,  // Stato per il primo indovinello della tomba
       tombRiddle2Solved: false,  // Stato per il secondo indovinello della tomba
-      tombSarcophagusOpened: false // Stato per il sarcofago aperto nella tomba
+      tombSarcophagusOpened: false, // Stato per il sarcofago aperto nella tomba
+      judgmentRiddleSolved: false // Stato per l'indovinello della camera del giudizio
     };
 
     /***** Array per i messaggi dello status (max 3) *****/
@@ -388,19 +389,26 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
         description: `Siete entrati nella maestosa Camera del Giudizio.  Al centro, una grande bilancia dorata domina la scena. Anubi, in statua, osserva severo. Un cartello: "Vietato toccare la bilancia...".  Una voce risuona: 'Prima di pesare, risolvi il mio enigma, mortale!': 'Sono custode silenzioso, misuro senza toccare, decido il valore, ma non posso giudicare. Cosa sono?' Le uscite? A sud, per tornare dalle statue, e nord, ancora sbarrata.`,
         items: [],
         puzzle: {
-          type: "sequence",
-          commands: [
-            function(cmd) {
-              return (cmd === "rispondo bilancia" || cmd === "rispondo balance" || cmd === "bilancia" || cmd === "balance");
-            },
-            "pesa amuleto"
-          ],
-          progress: 0,
-          hint: "Suggerimento: L'enigma parla di qualcosa che 'misura senza toccare' e 'decide il valore'.  Guardatevi intorno in questa stanza... cosa potrebbe essere?",
-          solved: false,
-          successDescription: "Appena pronunciate la risposta all'enigma - 'BILANCIA!' -  la voce spettrale tace.  Sembra che Anubi sia soddisfatto della vostra risposta.  Ora potete avvicinarvi alla bilancia e fare ciò che è necessario.",
-          requiresItem: "amuleto",
-          removeItem: true
+          riddle: { // Puzzle per l'indovinello della bilancia
+            type: "single",
+            command: ["rispondo bilancia", "rispondo balance", "bilancia", "balance"],
+            hint: "Suggerimento: L'enigma parla di qualcosa che 'misura senza toccare' e 'decide il valore'.  Guardatevi intorno in questa stanza... cosa potrebbe essere?",
+            solved: false,
+            successDescription: "Appena pronunciate la risposta all'enigma - 'BILANCIA!' -  la voce spettrale tace.  Sembra che Anubi sia soddisfatto della vostra risposta.  Ora potete avvicinarvi alla bilancia e fare ciò che è necessario.",
+          },
+          weighing: { // Puzzle per pesare l'amuleto, disponibile solo dopo aver risolto l'indovinello
+            type: "single",
+            command: "pesa amuleto",
+            requiresPuzzleSolved: "riddle", // Dipende dalla risoluzione del puzzle 'riddle'
+            requiresItem: "amuleto",
+            removeItem: true,
+            hint: "Suggerimento: Avete risolto l'indovinello della bilancia. Ora... cosa dovreste fare con quell'amuleto che avete nell'inventario e quella bilancia gigante al centro della stanza?",
+            solved: false,
+            successDescription: "Con l'amuleto in mano, vi avvicinate alla bilancia dorata.  Con un gesto solenne, deponete l'amuleto su uno dei piatti.  La bilancia oscilla leggermente, poi si ferma, perfettamente in equilibrio.  Un raggio di luce dorata avvolge la bilancia, e un sonoro 'click' proviene dalla porta a nord, che si spalanca, rivelando il passaggio.  Anubi annuisce impercettibilmente, segno che avete superato anche questa prova.  La giustizia è stata fatta... o almeno pesata correttamente!"
+          },
+          solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
+            return this.riddle.solved && this.weighing.solved;
+          }
         },
         exits: { sud: 8, nord: 10 },
         lockedExits: { nord: true }
@@ -525,8 +533,54 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
     function processPuzzleCommand(room, command) {
       if (!room.puzzle) return false; // Se non c'è puzzle, esci subito
 
+      // STANZA 9 - CAMERA DEL GIUDIZIO
+      if (gameState.currentRoom === 9) {
+        const riddlePuzzle = room.puzzle.riddle;
+        const weighingPuzzle = room.puzzle.weighing;
+
+        if (riddlePuzzle && !riddlePuzzle.solved) { // Puzzle dell'indovinello della bilancia
+          let result = flexibleMatchSingle(riddlePuzzle.command, command);
+          if (result === 1) {
+            riddlePuzzle.solved = true;
+            gameState.judgmentRiddleSolved = true; // Imposta lo stato globale
+            addStatus(riddlePuzzle.successDescription, "enigma-message");
+            return true;
+          } else if (result === -1) {
+            handleError(riddlePuzzle.hint);
+            return true;
+          }
+        }
+
+        if (weighingPuzzle && !weighingPuzzle.solved && gameState.judgmentRiddleSolved) { // Puzzle del pesare l'amuleto, SOLO se l'indovinello è risolto
+          let result = flexibleMatchSingle(weighingPuzzle.command, command);
+          if (result === 1) {
+            weighingPuzzle.solved = true;
+            if (weighingPuzzle.removeItem) {
+               if (weighingPuzzle.requiresItem) {
+                  removeFromInventory(weighingPuzzle.requiresItem);
+               }
+            }
+            for (let dir in room.lockedExits) room.lockedExits[dir] = false;
+            if (weighingPuzzle.successDescription || weighingPuzzle.customSuccess) {
+               let descriptions = weighingPuzzle.successDescription || weighingPuzzle.customSuccess;
+               if (Array.isArray(descriptions)) {
+                  descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+               } else {
+                  addStatus(descriptions, "enigma-message");
+               }
+            }
+            return true;
+          } else if (result === -1) {
+            handleError(weighingPuzzle.hint);
+            return true;
+          }
+        }
+      }
+
+
       // STANZA 7 - BIBLIOTECA
       if (gameState.currentRoom === 7) {
+        // ... (rest of stanza 7 puzzle logic - no changes needed here) ...
         const riddlePuzzle = room.puzzle.riddle;
         const amphoraPuzzle = room.puzzle.amphora;
 
@@ -576,6 +630,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
 
       // STANZA 10 - TOMBA
       if (gameState.currentRoom === 10) {
+        // ... (rest of stanza 10 puzzle logic - no changes needed here) ...
         const riddle1Puzzle = room.puzzle.riddle1;
         const riddle2Puzzle = room.puzzle.riddle2;
         const useKeyPuzzle = room.puzzle.useKey;
@@ -635,7 +690,8 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         }
       }
 
-      // Processa i puzzle "single" e "sequence" come prima PER LE ALTRE STANZE (es. stanza 2, 3, 4, 5, 6, 8, 9)
+
+      // Processa i puzzle "single" e "sequence" come prima PER LE ALTRE STANZE (es. stanza 2, 3, 4, 5, 6, 8)
       if (room.puzzle.type === "single" || room.puzzle.type === "sequence") { // Mantiene la compatibilità per le stanze esistenti
          return processDefaultPuzzleCommand(room, command); // Usa la funzione separata per la logica precedente
       }
@@ -795,7 +851,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         return;
       }
 
-      // Processa il comando per i puzzle (gestione differenziata per stanze 7 e 10)
+      // Processa il comando per i puzzle (gestione differenziata per stanze 7, 9 e 10)
       if (rooms[gameState.currentRoom].puzzle) {
         if (processPuzzleCommand(rooms[gameState.currentRoom], command)) return;
       }
@@ -812,12 +868,15 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       gameState.tombRiddle1Solved = false; // Resetta stati tomba
       gameState.tombRiddle2Solved = false;
       gameState.tombSarcophagusOpened = false;
+      gameState.judgmentRiddleSolved = false; // Resetta stato camera giudizio
+
 
       for (let id in rooms) {
         const room = rooms[id];
         if (room.puzzle) {
-          if (typeof room.puzzle.solved === 'function') { // Per stanze 7 e 10 con puzzle multipli e funzione 'solved'
-             room.puzzle.riddle.solved = false; // Resetta riddle stanza 7
+          if (typeof room.puzzle.solved === 'function') { // Per stanze 7, 9 e 10 con puzzle multipli e funzione 'solved'
+             room.puzzle.riddle.solved = false; // Resetta riddle stanza 7 & 9
+             if (room.puzzle.weighing) room.puzzle.weighing.solved = false; // se c'è anche il peso (stanza 9)
              if (room.puzzle.amphora) room.puzzle.amphora.solved = false; // se c'è anche l'anfora (stanza 7)
              if (room.puzzle.riddle1) room.puzzle.riddle1.solved = false; // Resetta riddle1 stanza 10
              if (room.puzzle.riddle2) room.puzzle.riddle2.solved = false; // Resetta riddle2 stanza 10
