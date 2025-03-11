@@ -5,6 +5,7 @@
   <title>Il Mistero della Piramide Perduta - Edizione Deluxe Risate Garantite</title>
   <!-- Font tematici da Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
 body {
   background: linear-gradient(to bottom, #d2b48c, #a0522d); /* Sfondo desertico caldo */
@@ -133,7 +134,11 @@ body {
       currentRoom: 0, // 0 = schermata introduttiva
       lives: 3,
       inventory: [],
-      errorOccurred: false
+      errorOccurred: false,
+      libraryRiddleSolved: false, // Stato per l'indovinello della biblioteca
+      tombRiddle1Solved: false,  // Stato per il primo indovinello della tomba
+      tombRiddle2Solved: false,  // Stato per il secondo indovinello della tomba
+      tombSarcophagusOpened: false // Stato per il sarcofago aperto nella tomba
     };
 
     /***** Array per i messaggi dello status (max 3) *****/
@@ -204,7 +209,7 @@ body {
 
 La fioca luce che filtra dall'ingresso, ormai sigillato dalla sabbia come una busta di patatine aperta male, sta svanendo alla velocità della vostra sanità mentale. Le speranze di rivedere la nuova stagione della vostra serie preferita si affievoliscono di secondo in secondo.
 
-Per fortuna, sul pavimento troneggia una torcia. Probabilmente l'ha persa qualcuno con meno pazienza di voi (e ce ne vuole parecchia, fidatevi).
+Per fortuna, sul pavimento troneggia una torcia. Probabilmente l'ha persa qualcuno con meno pazienza di voi (e ce ne vuole parecchia, fidatevi). Prova a scrivere "prendi torcia", così magari ci sarà più luce; non credi?
 A sud, una porta decorata con uno scarabeo che vi lancia un'occhiataccia e sembra sussurrare: "Benvenuti nella trappola per turisti, polli!".`,
         items: ["torcia"],
         puzzle: null,
@@ -235,7 +240,7 @@ In un angolo, una corda arrotolata che sembra appena uscita da un film western d
         title: "LE SABBIE MOBILI - La fuga è appesa a un filo... di corda!",
         description: `Appena mettete piede nella stanza, il terreno scompare sotto i vostri piedi! **Sabbie mobili!**  State affondando rapidamente, risucchiati da questa trappola insidiosa come un panino nel buco nero della fame di mezzanotte.  La sabbia vi stringe già le gambe, facendovi seriamente dubitare della sanità mentale di chi ha progettato questa piramide.
 
-Non c'è nulla a cui aggrapparsi, solo sabbia viscida e implacabile che vi inghiotte centimetro dopo centimetro.  La **corda** che avete trovato nella stanza precedente è **essenziale** per uscire da questa situazione appiccicosa.  Usatela con saggezza se volete raggiungere la porta a nord, altrimenti diventerete parte dell'arredamento (funebre) di questa stanza.`, // Descrizione RIVISTA per essere più diretta
+Non c'è nulla a cui aggrapparsi, solo sabbia viscida e implacabile che vi inghiotte centimetro dopo centimetro.  La corda che avete trovato nella stanza precedente è essenziale per uscire da questa situazione appiccicosa.  Usatela con saggezza se volete raggiungere la porta a nord, altrimenti diventerete parte dell'arredamento (funebre) di questa stanza.`, // Descrizione RIVISTA per essere più diretta
         items: [],
         puzzle: {
           type: "single",
@@ -326,22 +331,32 @@ Cosa sono?"
 Le uscite? A sud, se preferite tornare al caos del Corridoio delle Frecce, e a est, se pensate di avere la risposta all'indovinello e volete tentare la fortuna.`,
         items: ["anfora"], // L'anfora è presente nella stanza
         puzzle: {
-          type: "sequence",
-          commands: [
-            "rispondo libro", "libro",
-            "rompi anfora" // Nuovo comando nella sequenza
-          ],
-          progress: 0,
-          hint: "Suggerimento: L'indovinello descrive qualcosa che 'racconta storie', 'viaggia nel tempo e nello spazio' e 'apre mondi'.  In questa stanza siete circondati da... cosa?  Avete notato quell'anfora diversa dalle altre?",
-          solved: false,
-          reward: "chiave egizia", // La ricompensa ora è la chiave egizia
-          customSuccess: [ // Descrizione personalizzata per il successo del puzzle
-            "Appena pronunciate la risposta all'indovinello - 'LIBRO!' -  una luce soffusa emana dal libro aperto sul tavolo.  Le pagine iniziano a sfogliarsi da sole, vorticosamente, fino a fermarsi su una pagina bianca, apparentemente vuota.  Poi, lentamente, delle parole iniziano a materializzarsi sulla pagina, come inchiostro invisibile che si rivela: 'CERCA LA CHIAVE!'.",
-            "Seguendo il consiglio del libro magico, notate l'anfora defilata sullo scaffale.  Sembra diversa dalle altre...",
-            "Con un gesto deciso, **rompete l'anfora**.  Frammenti di terracotta volano ovunque, e tra i cocci, ecco brillare una **chiave egizia** finemente lavorata!  L'avete raccolta!" ,
-            "Contemporaneamente, il muro est vibra, e una sezione di parete si sposta lateralmente, rivelando un'apertura buia.  Il libro e l'anfora vi hanno aperto una nuova via!  Evidentemente, la conoscenza e un po' di forza bruta sono un'ottima combinazione..."
-          ],
-          successDescription: null // successDescription standard non più usato, ora c'è customSuccess
+          riddle: { // Puzzle per l'indovinello
+            type: "single",
+            command: ["rispondo libro", "libro"],
+            hint: "Suggerimento: L'indovinello descrive qualcosa che 'racconta storie', 'viaggia nel tempo e nello spazio' e 'apre mondi'.  In questa stanza siete circondati da... cosa?",
+            solved: false,
+            customSuccess: [
+              "Appena pronunciate la risposta all'indovinello - 'LIBRO!' -  una luce soffusa emana dal libro aperto sul tavolo.  Le pagine iniziano a sfogliarsi da sole, vorticosamente, fino a fermarsi su una pagina bianca, apparentemente vuota.  Poi, lentamente, delle parole iniziano a materializzarsi sulla pagina, come inchiostro invisibile che si rivela: 'CERCA LA CHIAVE!'.",
+              "Sembra che l'indovinello del libro sia risolto. Ora, cosa fare?"
+            ],
+          },
+          amphora: { // Puzzle per l'anfora, disponibile solo dopo aver risolto l'indovinello
+            type: "single",
+            command: "rompi anfora",
+            requiresPuzzleSolved: "riddle", // Dipende dalla risoluzione del puzzle 'riddle'
+            hint: "Suggerimento: Il libro magico vi ha suggerito di 'cercare la chiave'. Avete notato quell'anfora diversa dalle altre? Forse è il caso di esaminarla meglio, o... di fare qualcosa di più 'drastico'?",
+            solved: false,
+            reward: "chiave egizia",
+            customSuccess: [
+              "Seguendo il consiglio del libro magico, notate l'anfora defilata sullo scaffale.  Sembra diversa dalle altre...",
+              "Con un gesto deciso, **rompete l'anfora**.  Frammenti di terracotta volano ovunque, e tra i cocci, ecco brillare una **chiave egizia** finemente lavorata!  L'avete raccolta!" ,
+              "Contemporaneamente, il muro est vibra, e una sezione di parete si sposta lateralmente, rivelando un'apertura buia.  Il libro e l'anfora vi hanno aperto una nuova via!  Evidentemente, la conoscenza e un po' di forza bruta sono un'ottima combinazione..."
+            ],
+          },
+          solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
+            return this.riddle.solved && this.amphora.solved;
+          }
         },
         exits: { sud: 6, est: 8 },
         lockedExits: { est: true }
@@ -398,29 +413,44 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
 Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ciò che resta quando tutto è perduto, l'ultimo respiro prima del silenzio eterno. Cosa sono?'.  Accanto, una statua di Anubis con cavità nel petto.  Non ci sono porte visibili, a parte quella a sud.`,
         items: [],
         puzzle: {
-          type: "sequence",
-          commands: [
-            function(cmd) {
-              return (cmd === "rispondo ombra" || cmd === "rispondo memoria" || cmd === "ombra" || cmd === "memoria");
-            },
-            "apri sarcofago",
-            function(cmd) {
-              return (cmd === "rispondo uscita" || cmd === "rispondo passaggio" || cmd === "rispondo libertà" || cmd === "uscita" || cmd === "passaggio" || cmd === "libertà");
-            },
-            "usa chiave egizia" // Comando finale modificato: usa chiave egizia
-          ],
-          progress: 0,
-          hint: "Suggerimento:  L'enigma parla di 'ciò che resta quando tutto è perduto' e 'l'ultimo respiro prima del silenzio'.  Cosa svanisce con la luce?  Forse la chiave per l'uscita non è lo scettro...",
-          solved: false,
-          successDescription: [
-            "Appena pronunciate la risposta all'enigma - 'OMBRA!' -  la stanza vibra.  Con rumore sinistro, il sarcofago dorato si apre lentamente, rivelando una cavità interna.",
-            "Una nuova scritta appare magicamente sul sarcofago aperto: 'Ora che hai svelato il mio primo segreto, risolvi questo per la vera libertà: Non sono porta, ma conduco via, non sono finestra, ma dono luce nuova.  Sono l'assenza di muri, la fine del cammino. Cosa sono?'",
-            "Con la risposta al secondo enigma - 'USCITA!' -  un raggio di luce verde smeraldo si proietta dal sarcofago verso il muro nord, illuminando un punto.",
-            "Prendete la **chiave egizia** dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...", // Modificato per suggerire l'uso della chiave
-            "Inserite la chiave egizia nella cavità nel petto della statua di Anubis.  Un boato sordo, e una sezione del muro scorre lateralmente, rivelando un passaggio segreto!"
-          ],
-          requiresItem: "chiave egizia", // Richiede la chiave egizia ora
-          removeItem: true // La chiave egizia viene rimossa dopo l'uso
+          riddle1: { // Puzzle per il primo indovinello ("ombra")
+            type: "single",
+            command: ["rispondo ombra", "rispondo memoria", "ombra", "memoria"],
+            hint: "Suggerimento:  L'enigma parla di 'ciò che resta quando tutto è perduto' e 'l'ultimo respiro prima del silenzio'.  Cosa svanisce con la luce?",
+            solved: false,
+            customSuccess: [
+              "Appena pronunciate la risposta all'enigma - 'OMBRA!' -  la stanza vibra.  Con rumore sinistro, il sarcofago dorato si apre lentamente, rivelando una cavità interna.",
+              "Una nuova scritta appare magicamente sul sarcofago aperto: 'Ora che hai svelato il mio primo segreto, risolvi questo per la vera libertà: Non sono porta, ma conduco via, non sono finestra, ma dono luce nuova.  Sono l'assenza di muri, la fine del cammino. Cosa sono?'",
+              "Sembra che il primo enigma sia risolto.  Ora c'è un secondo enigma... e il sarcofago è aperto!"
+            ],
+          },
+          riddle2: { // Puzzle per il secondo indovinello ("uscita")
+            type: "single",
+            command: ["rispondo uscita", "rispondo passaggio", "rispondo libertà", "uscita", "passaggio", "libertà"],
+            requiresPuzzleSolved: "riddle1", // Dipende dalla risoluzione del puzzle 'riddle1'
+            hint: "Suggerimento: Il secondo indovinello parla di qualcosa che 'conduce via', 'dona luce nuova' e 'l'assenza di muri'.  Pensate all'obiettivo finale in un labirinto...",
+            solved: false,
+            customSuccess: [
+              "Con la risposta al secondo enigma - 'USCITA!' -  un raggio di luce verde smeraldo si proietta dal sarcofago verso il muro nord, illuminando un punto.",
+              "Sembra che anche il secondo enigma sia risolto! Ora cosa bisogna fare?"
+            ],
+          },
+          useKey: { // Puzzle per usare la chiave egizia
+            type: "single",
+            command: "usa chiave egizia",
+            requiresPuzzleSolved: "riddle2", // Dipende dalla risoluzione del puzzle 'riddle2'
+            requiresItem: "chiave egizia",
+            removeItem: true,
+            hint: "Suggerimento:  Avete una chiave egizia... e un raggio di luce indica un punto sul muro nord. Forse la chiave va usata lì? O forse... osservate attentamente la statua di Anubis...", // Hint modificato
+            solved: false,
+            customSuccess: [
+              "Prendete la **chiave egizia** dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...", // Modificato per suggerire l'uso della chiave
+              "Inserite la chiave egizia nella cavità nel petto della statua di Anubis.  Un boato sordo, e una sezione del muro scorre lateralmente, rivelando un passaggio segreto!"
+            ],
+          },
+          solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
+            return this.riddle1.solved && this.riddle2.solved && this.useKey.solved;
+          }
         },
         exits: { sud: 9, passaggio: "win" },
         lockedExits: { passaggio: true }
@@ -493,6 +523,128 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
 
     /***** Gestione dei comandi puzzle *****/
     function processPuzzleCommand(room, command) {
+      if (!room.puzzle) return false; // Se non c'è puzzle, esci subito
+
+      // STANZA 7 - BIBLIOTECA
+      if (gameState.currentRoom === 7) {
+        const riddlePuzzle = room.puzzle.riddle;
+        const amphoraPuzzle = room.puzzle.amphora;
+
+        if (riddlePuzzle && !riddlePuzzle.solved) { // Puzzle dell'indovinello del libro
+          let result = flexibleMatchSingle(riddlePuzzle.command, command);
+          if (result === 1) {
+            riddlePuzzle.solved = true;
+            gameState.libraryRiddleSolved = true; // Imposta lo stato globale
+            addStatus(riddlePuzzle.customSuccess[0], "enigma-message");
+            addStatus(riddlePuzzle.customSuccess[1], "enigma-message");
+            return true;
+          } else if (result === -1) {
+            handleError(riddlePuzzle.hint);
+            return true;
+          }
+        }
+
+        if (amphoraPuzzle && !amphoraPuzzle.solved && gameState.libraryRiddleSolved && command === "rompi anfora") { // Puzzle dell'anfora, SOLO se l'indovinello è risolto
+          let result = flexibleMatchSingle(amphoraPuzzle.command, command);
+          if (result === 1) {
+            amphoraPuzzle.solved = true;
+            if (amphoraPuzzle.removeItem) {
+               if (amphoraPuzzle.requiresItem) {
+                  removeFromInventory(amphoraPuzzle.requiresItem);
+               }
+            }
+            if (amphoraPuzzle.reward && !gameState.inventory.includes(amphoraPuzzle.reward)) {
+              gameState.inventory.push(amphoraPuzzle.reward);
+              addStatus(`Avete ottenuto: ${amphoraPuzzle.reward}.  Mettetelo via, che non si sa mai cosa può servire.`, "system-message");
+            }
+            for (let dir in room.lockedExits) room.lockedExits[dir] = false;
+            if (amphoraPuzzle.successDescription || amphoraPuzzle.customSuccess) {
+               let descriptions = amphoraPuzzle.successDescription || amphoraPuzzle.customSuccess;
+               if (Array.isArray(descriptions)) {
+                  descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+               } else {
+                  addStatus(descriptions, "enigma-message");
+               }
+            }
+            return true;
+          } else if (result === -1) {
+            handleError(amphoraPuzzle.hint);
+            return true;
+          }
+        }
+      }
+
+      // STANZA 10 - TOMBA
+      if (gameState.currentRoom === 10) {
+        const riddle1Puzzle = room.puzzle.riddle1;
+        const riddle2Puzzle = room.puzzle.riddle2;
+        const useKeyPuzzle = room.puzzle.useKey;
+
+        if (riddle1Puzzle && !riddle1Puzzle.solved) { // Primo indovinello ("ombra")
+          let result = flexibleMatchSingle(riddle1Puzzle.command, command);
+          if (result === 1) {
+            riddle1Puzzle.solved = true;
+            gameState.tombRiddle1Solved = true;
+            addStatus(riddle1Puzzle.customSuccess[0], "enigma-message");
+            addStatus(riddle1Puzzle.customSuccess[1], "enigma-message");
+            addStatus(riddle1Puzzle.customSuccess[2], "enigma-message"); // Messaggio aggiuntivo
+            return true;
+          } else if (result === -1) {
+            handleError(riddle1Puzzle.hint);
+            return true;
+          }
+        }
+
+        if (riddle2Puzzle && !riddle2Puzzle.solved && gameState.tombRiddle1Solved) { // Secondo indovinello ("uscita"), solo dopo il primo
+          let result = flexibleMatchSingle(riddle2Puzzle.command, command);
+          if (result === 1) {
+            riddle2Puzzle.solved = true;
+            gameState.tombRiddle2Solved = true;
+            addStatus(riddle2Puzzle.customSuccess[0], "enigma-message");
+            addStatus(riddle2Puzzle.customSuccess[1], "enigma-message"); // Messaggio aggiuntivo
+            return true;
+          } else if (result === -1) {
+            handleError(riddle2Puzzle.hint);
+            return true;
+          }
+        }
+
+        if (useKeyPuzzle && !useKeyPuzzle.solved && gameState.tombRiddle2Solved) { // Usa chiave, solo dopo il secondo indovinello
+          let result = flexibleMatchSingle(useKeyPuzzle.command, command);
+          if (result === 1) {
+            useKeyPuzzle.solved = true;
+            if (useKeyPuzzle.removeItem) {
+               if (useKeyPuzzle.requiresItem) {
+                  removeFromInventory(useKeyPuzzle.requiresItem);
+               }
+            }
+            for (let dir in room.lockedExits) room.lockedExits[dir] = false;
+            if (useKeyPuzzle.successDescription || useKeyPuzzle.customSuccess) {
+               let descriptions = useKeyPuzzle.successDescription || useKeyPuzzle.customSuccess;
+               if (Array.isArray(descriptions)) {
+                  descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+               } else {
+                  addStatus(descriptions, "enigma-message");
+               }
+            }
+            return true;
+          } else if (result === -1) {
+            handleError(useKeyPuzzle.hint);
+            return true;
+          }
+        }
+      }
+
+      // Processa i puzzle "single" e "sequence" come prima PER LE ALTRE STANZE (es. stanza 2, 3, 4, 5, 6, 8, 9)
+      if (room.puzzle.type === "single" || room.puzzle.type === "sequence") { // Mantiene la compatibilità per le stanze esistenti
+         return processDefaultPuzzleCommand(room, command); // Usa la funzione separata per la logica precedente
+      }
+
+      return false;
+    }
+
+    // Funzione separata per processare i puzzle "single" e "sequence" standard (precedente logica)
+    function processDefaultPuzzleCommand(room, command) {
       if (!room.puzzle || room.puzzle.solved) return false;
       if (room.puzzle.type === "single") {
         if (room.puzzle.requiresItem) {
@@ -597,6 +749,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       return false;
     }
 
+
     /***** Gestione del movimento *****/
     function handleMovement(direction) {
       const room = rooms[gameState.currentRoom];
@@ -641,10 +794,12 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         handleItemPickup(command);
         return;
       }
-      const room = rooms[gameState.currentRoom];
-      if (room.puzzle && !room.puzzle.solved) {
-        if (processPuzzleCommand(room, command)) return;
+
+      // Processa il comando per i puzzle (gestione differenziata per stanze 7 e 10)
+      if (rooms[gameState.currentRoom].puzzle) {
+        if (processPuzzleCommand(rooms[gameState.currentRoom], command)) return;
       }
+
       addStatus("Comando non riconosciuto.  Forse volevate dire 'apriti sesamo'?  No, qui non funziona.", "system-message");
     }
 
@@ -653,15 +808,29 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       gameState.lives = 3;
       gameState.inventory = [];
       gameState.errorOccurred = false;
+      gameState.libraryRiddleSolved = false; // Resetta stato biblioteca
+      gameState.tombRiddle1Solved = false; // Resetta stati tomba
+      gameState.tombRiddle2Solved = false;
+      gameState.tombSarcophagusOpened = false;
+
       for (let id in rooms) {
         const room = rooms[id];
         if (room.puzzle) {
-          room.puzzle.solved = false;
-          if (room.puzzle.type === "sequence") room.puzzle.progress = 0;
+          if (typeof room.puzzle.solved === 'function') { // Per stanze 7 e 10 con puzzle multipli e funzione 'solved'
+             room.puzzle.riddle.solved = false; // Resetta riddle stanza 7
+             if (room.puzzle.amphora) room.puzzle.amphora.solved = false; // se c'è anche l'anfora (stanza 7)
+             if (room.puzzle.riddle1) room.puzzle.riddle1.solved = false; // Resetta riddle1 stanza 10
+             if (room.puzzle.riddle2) room.puzzle.riddle2.solved = false; // Resetta riddle2 stanza 10
+             if (room.puzzle.useKey) room.puzzle.useKey.solved = false;   // Resetta useKey stanza 10
+          } else { // Per le altre stanze con puzzle "single" o "sequence" standard
+             room.puzzle.solved = false;
+             if (room.puzzle.type === "sequence") room.puzzle.progress = 0;
+          }
         }
       }
       showCurrentRoom();
     }
+
 
     /***** Gestione dell'input *****/
     document.getElementById("game-input").addEventListener("keydown", function(e) {
@@ -676,7 +845,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
 
     /***** Schermata introduttiva completa *****/
     function showIntro() {
-      const introText = `IL MISTERO DELLA PIRAMIDE PERDUTA - Edizione Deluxe Risate Garantite!
+      const introText = `<div class="room-title" style="font-family: 'Cinzel Decorative', serif;">IL MISTERO DELLA PIRAMIDE PERDUTA - Edizione Deluxe Risate Garantite!</div>
 
 Benvenuti, aspiranti archeologi da strapazzo! Avete vinto un viaggio premio (si fa per dire) in Egitto, partecipando al famigerato concorso radiofonico "Piramidi & Panini", l'unico programma che va in onda alle 4 del mattino e che, realisticamente, ascoltano solo i vostri gatti.
 
