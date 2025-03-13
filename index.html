@@ -61,7 +61,7 @@ body {
 
 #game-input {
   width: 100%;
-  padding: 12px;
+  padding: 20px;
   font-size: 1.1em;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -233,13 +233,13 @@ In un angolo, una corda arrotolata che sembra appena uscita da un film western d
           customSuccess: "Un rumore di ingranaggi arrugginiti riempie la stanza. La porta a est vibra, poi si apre con un cigolio che sveglierebbe anche un faraone millenario.  Avete sbloccato il passaggio!  Ora, pronti per la prossima sfida?" ,
           successDescription: "Con la sequenza corretta, i simboli si illuminano brevemente di una luce verdognola.  Un meccanismo arrugginito si attiva con un rumore di ferraglia, e la porta a est, con un sussulto, si sblocca, aprendosi quel tanto che basta per farvi passare.  Non esattamente un'apertura trionfale, ma ehi, funziona!"
         },
-        exits: { est: 3, ovest: 1 }, // Corretto: aggiunta uscita OVEST verso stanza 1 (INGRESSO) -  ERRORE! deve essere verso stanza 1, non stanza 3
+        exits: { est: 3, nord: 1 }, // Corretto: aggiunta uscita NORD verso stanza 1 (INGRESSO)
         lockedExits: { est: true }
       },
       3: {
         id: 3,
         title: "LE SABBIE MOBILI - La fuga è appesa a un filo... di corda!",
-        description: `Appena mettete piede nella stanza, il terreno scompare sotto i vostri piedi! **Sabbie mobili!**  State affondando rapidamente, risucchiati da questa trappola insidiosa come un panino nel buco nero della fame di mezzanotte.  La sabbia vi stringe già le gambe, facendovi seriamente dubitare della sanità mentale di chi ha progettato questa piramide.
+        description: `Appena mettete piede nella stanza, il terreno scompare sotto i vostri piedi! Sabbie mobili!  State affondando rapidamente, risucchiati da questa trappola insidiosa come un panino nel buco nero della fame di mezzanotte.  La sabbia vi stringe già le gambe, facendovi seriamente dubitare della sanità mentale di chi ha progettato questa piramide.
 
 Non c'è nulla a cui aggrapparsi, solo sabbia viscida e implacabile che vi inghiotte centimetro dopo centimetro.  La corda che avete trovato nella stanza precedente è essenziale per uscire da questa situazione appiccicosa.  Usatela con saggezza se volete raggiungere la porta a nord, altrimenti diventerete parte dell'arredamento (funebre) di questa stanza.`, // Descrizione RIVISTA per essere più diretta
         items: [],
@@ -386,7 +386,7 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
       9: {
         id: 9,
         title: "LA CAMERA DEL GIUDIZIO -  Anubi cerca stagista per pesatura anime (part-time)",
-        description: `Siete entrati nella maestosa Camera del Giudizio.  Al centro, una grande bilancia dorata domina la scena. Anubi, in statua, osserva severo. Un cartello: "Vietato toccare la bilancia...".  Una voce risuona: 'Prima di pesare, risolvi il mio enigma, mortale!': 'Sono custode silenzioso, misuro senza toccare, decido il valore, ma non posso giudicare. Cosa sono?' Le uscite? A sud, per tornare dalle statue, e nord, ancora sbarrata.`,
+        description: `Siete entrati nella maestosa Camera del Giudizio.  Al centro, una grande PESA dorata domina la scena. Anubi, in statua, osserva severo. Un cartello: "Vietato toccare la bilancia...".  Una voce risuona: 'Prima di pesare, risolvi il mio enigma, mortale!': 'Sono custode silenzioso, misuro senza toccare, decido il valore, ma non posso giudicare. Cosa sono?' Le uscite? A sud, per tornare dalle statue, e nord, ancora sbarrata.`,
         items: [],
         puzzle: {
           riddle: { // Puzzle per l'indovinello della bilancia
@@ -416,7 +416,7 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
       10: {
         id: 10,
         title: "LA TOMBA DEL FARAONE SMEMORATO -  Il tesoro... o la maledizione? Fate il vostro gioco!",
-        description: `Finalmente! Siete giunti alla leggendaria tomba del faraone Amenhotep Lo Smemorato.
+        description: `Finalmente! Siete giunti alla leggendaria tomba del faraone Smemorato.
 
 Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ciò che resta quando tutto è perduto, l'ultimo respiro prima del silenzio eterno. Cosa sono?'.  Accanto, una statua di Anubis con cavità nel petto.  Non ci sono porte visibili, a parte quella a sud.`,
         items: [],
@@ -427,7 +427,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
             hint: "Suggerimento:  L'enigma parla di 'ciò che resta quando tutto è perduto' e 'l'ultimo respiro prima del silenzio'.  Cosa svanisce con la luce?",
             solved: false,
             customSuccess: [
-              "Appena pronunciate la risposta all'enigma - 'OMBRA!' -  la stanza vibra.  Con rumore sinistro, il sarcofago dorato si apre lentamente, rivelando una cavità interna.",
+              "Appena pronunciate la risposta all'enigma la stanza vibra.  Con rumore sinistro, il sarcofago dorato si apre lentamente, rivelando una cavità interna.",
               "Una nuova scritta appare magicamente sul sarcofago aperto: 'Ora che hai svelato il mio primo segreto, risolvi questo per la vera libertà: Non sono porta, ma conduco via, non sono finestra, ma dono luce nuova.  Sono l'assenza di muri, la fine del cammino. Cosa sono?'",
               "Sembra che il primo enigma sia risolto.  Ora c'è un secondo enigma... e il sarcofago è aperto!"
             ],
@@ -439,21 +439,21 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
             hint: "Suggerimento: Il secondo indovinello parla di qualcosa che 'conduce via', 'dona luce nuova' e 'l'assenza di muri'.  Pensate all'obiettivo finale in un labirinto...",
             solved: false,
             customSuccess: [
-              "Con la risposta al secondo enigma - 'USCITA!' -  un raggio di luce verde smeraldo si proietta dal sarcofago verso il muro nord, illuminando un punto.",
+              "Con la risposta al secondo enigma un raggio di luce verde smeraldo si proietta dal sarcofago verso il muro nord, illuminando un punto.",
               "Sembra che anche il secondo enigma sia risolto! Ora cosa bisogna fare?"
             ],
           },
           useKey: { // Puzzle per usare la chiave egizia
             type: "single",
-            command: "usa chiave egizia",
+            command: "usa chiave",
             requiresPuzzleSolved: "riddle2", // Dipende dalla risoluzione del puzzle 'riddle2'
-            requiresItem: "chiave egizia",
+            requiresItem: "chiave",
             removeItem: true,
             hint: "Suggerimento:  Avete una chiave egizia... e un raggio di luce indica un punto sul muro nord. Forse la chiave va usata lì? O forse... osservate attentamente la statua di Anubis...", // Hint modificato
             solved: false,
             customSuccess: [
-              "Prendete la **chiave egizia** dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...", // Modificato per suggerire l'uso della chiave
-              "Inserite la chiave egizia nella cavità nel petto della statua di Anubis.  Un boato sordo, e una sezione del muro scorre lateralmente, rivelando un passaggio segreto!"
+              "Prendete la chiave egizia dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...", // Modificato per suggerire l'uso della chiave
+              "Inserite la chiave egizia nella cavità nel petto della statua di Anubis.  Un boato sordo, e una sezione del muro scorre lateralmente, rivelando un passaggio segreto! Adesso il comando PASSAGGIO è la chiave"
             ],
           },
           solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
@@ -498,7 +498,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       gameState.currentRoom = "gameover";
     }
     function winGame() {
-      addStatus("CONGRATULAZIONI! Avete completato il Mistero della Piramide Perduta con " + gameState.lives + " vite rimaste!  Siete dei veri Indiana Jones (o quasi).", "system-message");
+      addStatus("CONGRATULAZIONI! Avete completato il Mistero della Piramide Perduta con " + gameState.lives + " vite rimaste!  Siete dei veri Indiana Jones.", "system-message");
       addStatus("Volete rigiocare? (S/N)  Attenti che la fortuna non dura per sempre!", "system-message");
       gameState.currentRoom = "gameover";
     }
@@ -609,7 +609,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
             }
             if (amphoraPuzzle.reward && !gameState.inventory.includes(amphoraPuzzle.reward)) {
               gameState.inventory.push(amphoraPuzzle.reward);
-              addStatus(`Avete ottenuto: ${amphoraPuzzle.reward}.  Mettetelo via, che non si sa mai cosa può servire.`, "system-message");
+              addStatus(`Avete ottenuto: ${amphoraPuzzle.reward}.  Guarda l'inventario.`, "system-message");
             }
             for (let dir in room.lockedExits) room.lockedExits[dir] = false;
             if (amphoraPuzzle.successDescription || amphoraPuzzle.customSuccess) {
@@ -810,7 +810,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
     function handleMovement(direction) {
       const room = rooms[gameState.currentRoom];
       if (!room.exits.hasOwnProperty(direction)) {
-        addStatus("Non c'è nessuna uscita in quella direzione.  Forse avete il GPS rotto?", "system-message");
+        addStatus("Non c'è nessuna uscita in quella direzione.", "system-message");
         return;
       }
       if (room.lockedExits[direction] === true) {
@@ -904,7 +904,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
 
     /***** Schermata introduttiva completa *****/
     function showIntro() {
-      const introText = `<div class="room-title" style="font-family: 'Cinzel Decorative', serif;">IL MISTERO DELLA PIRAMIDE PERDUTA - Edizione Deluxe Risate Garantite!</div>
+      const introText = `<div class="room-title" style="font-family: 'Cinzel Decorative', serif;">IL MISTERO DELLA PIRAMIDE PERDUTA</div>
 
 Benvenuti, aspiranti archeologi da strapazzo! Avete vinto un viaggio premio (si fa per dire) in Egitto, partecipando al famigerato concorso radiofonico "Piramidi & Panini", l'unico programma che va in onda alle 4 del mattino e che, realisticamente, ascoltano solo i vostri gatti.
 
