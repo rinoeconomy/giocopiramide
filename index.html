@@ -222,7 +222,7 @@ A sud, una porta decorata con uno scarabeo che vi lancia un'occhiataccia e sembr
         title: "LA CAMERA DEI SIMBOLI - Premi i bottoni giusti o fai la fine della mummia!",
         description: `Con la torcia che finalmente fa luce (era ora!), la stanza rivela dettagli decisamente poco rassicuranti. Sulla parete occhieggiano tre simboli giganti, scolpiti nella pietra con la delicatezza di un elefante in una cristalleria: un falco, uno scarabeo e un serpente. La porta a est √® sbarrata da un meccanismo pi√π arrugginito delle vostre ginocchia dopo una maratona sul divano.
 
-In un angolo, una corda arrotolata che sembra appena uscita da un film western di serie B e uno specchio dorato appeso al muro, perfetto per controllare se il vostro cappello da esploratore √® ancora trendy (spoiler: no).`,
+In un angolo, una corda arrotolata che sembra appena uscita da un film western e uno specchio dorato appeso al muro, perfetto per controllare se il vostro cappello da esploratore √® ancora trendy (spoiler: no).`,
         items: ["corda", "specchio"],
         puzzle: {
           type: "sequence",
@@ -722,7 +722,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci√
           if (gameState.currentRoom === 2 && room.puzzle.customSuccess) {
             addStatus(room.puzzle.customSuccess, "enigma-message");
           } else {
-            addStatus("Enigma risolto!  Il vostro QI √® appena salito di qualche punto (forse).", "system-message");
+            addStatus("Enigma risolto! Il vostro QI √® appena salito di qualche punto (forse).", "system-message");
           }
           if (room.puzzle.reward && !gameState.inventory.includes(room.puzzle.reward)) {
             gameState.inventory.push(room.puzzle.reward);
@@ -739,7 +739,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci√
           }
           return true;
         } else if (result === 0) {
-          addStatus("Non conosco il comando.  Forse dovete parlare in egizio antico?", "system-message");
+          addStatus("Non conosco il comando. Forse dovete parlare in egizio antico?", "system-message");
           return true;
         } else {
           if (room.puzzle.type === "sequence") {
@@ -758,7 +758,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci√
           if (gameState.currentRoom === 4 && command.includes("specchio")) removeFromInventory("specchio");
           if (gameState.currentRoom === 5 && command.includes("moneta")) removeFromInventory("moneta");
           if (gameState.currentRoom === 9 && command.includes("amuleto")) removeFromInventory("amuleto");
-          if (gameState.currentRoom === 10 && command.includes("chiave egizia")) removeFromInventory("chiave egizia"); // Corretto: rimuove chiave egizia
+          if (gameState.currentRoom === 10 && command.includes("chiave")) removeFromInventory("chiave"); // Corretto: rimuove chiave egizia
           if (gameState.currentRoom === 7 && room.puzzle.progress === 1 && command.includes("rompi anfora")) { // Se si rompe l'anfora nella stanza 7
              const room7 = rooms[7];
              if (room7.items && room7.items.includes("anfora")) {
@@ -856,7 +856,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci√
         if (processPuzzleCommand(rooms[gameState.currentRoom], command)) return;
       }
 
-      addStatus("Comando non riconosciuto.  Forse volevate dire 'apriti sesamo'?  No, qui non funziona.", "system-message");
+      addStatus("Comando non riconosciuto. Forse volevate dire 'apriti sesamo'?  No, qui non funziona.", "system-message");
     }
 
     function restartGame() {
@@ -905,8 +905,7 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci√
     /***** Schermata introduttiva completa *****/
     function showIntro() {
       const introText = `<div class="room-title" style="font-family: 'Cinzel Decorative', serif;">IL MISTERO DELLA PIRAMIDE PERDUTA</div>
-
-Benvenuti, aspiranti archeologi da strapazzo! Avete vinto un viaggio premio (si fa per dire) in Egitto, partecipando al famigerato concorso radiofonico "Piramidi & Panini", l'unico programma che va in onda alle 4 del mattino e che, realisticamente, ascoltano solo i vostri gatti.
+Benvenuti, aspiranti archeologi da strapazzo! Avete vinto un viaggio premio in Egitto, partecipando al famigerato concorso radiofonico "Piramidi & Panini", l'unico programma che va in onda alle 4 del mattino e che, realisticamente, ascoltano solo i vostri gatti.
 
 "Congratulazioni!" vi ha gracchiato il conduttore con un entusiasmo contagioso come la peste bubbonica, "Avete vinto un soggiorno all-inclusive (nel senso che vi includiamo nella piramide) alla ricerca della leggendaria Piramide Perduta di Amenhotep Lo Smemorato, un faraone talmente anonimo che persino Google vi direbbe 'Nessun risultato trovato'.  Buona fortuna (ne avrete bisogno)!".
 
