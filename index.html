@@ -3,118 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <title>Il Mistero della Piramide Perduta - Edizione Deluxe Risate Garantite</title>
-  <!-- Font tematici da Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
-body {
-  background: linear-gradient(to bottom, #d2b48c, #a0522d); /* Sfondo desertico caldo */
-  color: #000000; /* Nero per il testo principale */
-  font-family: 'Noto Serif', serif; /* Font leggibile ed elegante */
-  font-size: 22px; /* Dimensione per una buona leggibilità */
-  line-height: 1.6; /* Spaziatura confortevole */
-  margin: 0;
-  padding: 0;
-}
-
-/* Contenitore del gioco */
-#game-container {
-  max-width: 800px;
-  margin: 20px auto;
-  background-color: #fff; /* Bianco per contrasto */
-  border: 3px solid #8b4513; /* Marrone rame per i bordi */
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Ombra leggera */
-  display: flex;
-  flex-direction: column;
-  height: 90vh;
-}
-
-/* Riquadro delle informazioni (descrizione + status) */
-#game-info {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background-color: #f4e3c7; /* Papiro caldo */
-  border-bottom: 2px solid #b8860b; /* Oro scuro */
-}
-
-/* Descrizione della stanza */
-#game-description {
-  white-space: pre-wrap; /* Preserva spazi e ritorni a capo */
-  margin-bottom: 10px;
-}
-
-/* Status del gioco */
-#game-status {
-  color: #4a2c1a; /* Marrone scuro */
-  font-size: 20px; /* Dimensione leggibile */
-}
-
-/* Riquadro per l'input */
-#game-input-container {
-  padding: 10px;
-  background-color: #d9c2a7; /* Sabbia media */
-  border-top: 2px solid #b8860b; /* Oro scuro */
-  border-radius: 0 0 8px 8px;
-}
-
-#game-input {
-  width: 100%;
-  padding: 20px;
-  font-size: 1.1em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-/* Titolo della stanza */
-.room-title {
-  font-family: 'Cinzel Decorative', serif; /* Font egiziano e ornamentale */
-  font-size: 1.6em; /* Dimensione equilibrata */
-  font-weight: 700;
-  color: #a0522d; /* Marrone terracotta */
-  text-align: center;
-  margin-bottom: 10px;
-  text-shadow: 1px 1px 2px #b8860b; /* Ombra dorata */
-}
-
-/* Messaggi di sistema */
-.system-message {
-  font-style: italic;
-  color: #4a2c1a; /* Marrone scuro */
-  font-size: 20px; /* Dimensione leggibile */
-  margin-top: 5px;
-}
-
-/* Messaggi enigma */
-.enigma-message {
-  color: #d32f2f; /* Rosso per risalto */
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-/* Schermata introduttiva */
-.intro {
-  font-size: 1.2em;
-  text-align: center;
-  line-height: 1.4;
-  white-space: pre-line;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  #game-container {
-    margin: 10px;
-    height: 90vh;
-  }
-  .room-title {
-    font-size: 1.4em; /* Ridotta per schermi piccoli */
-  }
-  body {
-    font-size: 20px; /* Ridotta per schermi piccoli */
-  }
-}
+    body {
+      background: linear-gradient(to bottom, #d2b48c, #a0522d);
+      color: #000000;
+      font-family: 'Noto Serif', serif;
+      font-size: 22px;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    #game-container {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      border: 3px solid #8b4513;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+    }
+    #game-info {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background-color: #f4e3c7;
+      border-bottom: 2px solid #b8860b;
+    }
+    #game-description { white-space: pre-wrap; margin-bottom: 10px; }
+    #game-status { color: #4a2c1a; font-size: 20px; }
+    #game-input-container {
+      padding: 10px;
+      background-color: #d9c2a7;
+      border-top: 2px solid #b8860b;
+      border-radius: 0 0 8px 8px;
+    }
+    #game-input {
+      width: 100%;
+      padding: 20px;
+      font-size: 1.1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .room-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.6em;
+      font-weight: 700;
+      color: #a0522d;
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 2px #b8860b;
+    }
+    .system-message { font-style: italic; color: #4a2c1a; font-size: 20px; margin-top: 5px; }
+    .enigma-message { color: #d32f2f; font-weight: bold; margin-top: 5px; }
+    .intro { font-size: 1.2em; text-align: center; line-height: 1.4; white-space: pre-line; }
+    @media (max-width: 600px) {
+      #game-container { margin: 10px; height: 90vh; }
+      .room-title { font-size: 1.4em; }
+      body { font-size: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -129,20 +80,18 @@ body {
   </div>
 
   <script>
-    /***** Stato di gioco *****/
     const gameState = {
-      currentRoom: 0, // 0 = schermata introduttiva
+      currentRoom: 0,
       lives: 3,
       inventory: [],
       errorOccurred: false,
-      libraryRiddleSolved: false, // Stato per l'indovinello della biblioteca
-      tombRiddle1Solved: false,  // Stato per il primo indovinello della tomba
-      tombRiddle2Solved: false,  // Stato per il secondo indovinello della tomba
-      tombSarcophagusOpened: false, // Stato per il sarcofago aperto nella tomba
-      judgmentRiddleSolved: false // Stato per l'indovinello della camera del giudizio
+      libraryRiddleSolved: false,
+      tombRiddle1Solved: false,
+      tombRiddle2Solved: false,
+      tombSarcophagusOpened: false,
+      judgmentRiddleSolved: false
     };
 
-    /***** Array per i messaggi dello status (max 3) *****/
     let statusMessages = [];
     function updateStatusPanel() {
       const statusDiv = document.getElementById("game-status");
@@ -159,7 +108,6 @@ body {
       updateStatusPanel();
     }
 
-    /***** Dizionario dei sinonimi per i verbi *****/
     const verbSynonyms = {
       "premi": ["premi", "spingi", "schiaccia", "pigia", "schiacciabottoni"],
       "usa": ["usa", "utilizza", "adopera", "sfrutta"],
@@ -170,22 +118,26 @@ body {
       "rispondo": ["rispondo", "dico", "ribatto", "replico"],
       "apri": ["apri", "spalanca", "dischiudi", "scoperchia"],
       "esamina": ["esamina", "osserva", "scruta", "ispeziona", "analizza", "studia"],
-      "rompi": ["rompi", "frantuma", "distruggi", "spacca"] // Nuovo sinonimo per "rompi"
+      "rompi": ["rompi", "frantuma", "distruggi", "spacca"]
     };
 
-    /***** Confronto flessibile dei comandi *****/
     function flexibleMatch(expected, input) {
       let expWords = expected.trim().toLowerCase().split(" ");
       let inpWords = input.trim().toLowerCase().split(" ");
-      if (expWords.length === 1 && inpWords.length === 1) {
-        return expWords[0] === inpWords[0] ? 1 : -1;
-      }
       if (expWords.length !== inpWords.length) return -1;
-      if (expWords.length !== inpWords.length) return -1;
+      if (expWords.length < 2) return -1;
+
       let expectedVerb = expWords[0];
       let inputVerb = inpWords[0];
-      if (!verbSynonyms[expectedVerb]) return expectedVerb === inputVerb ? 1 : 0;
-      return verbSynonyms[expectedVerb].includes(inputVerb) ? 1 : 0;
+      let expectedObject = expWords.slice(1).join(" ");
+      let inputObject = inpWords.slice(1).join(" ");
+
+      let verbMatch = verbSynonyms[expectedVerb] ? verbSynonyms[expectedVerb].includes(inputVerb) : expectedVerb === inputVerb;
+      let objectMatch = expectedObject === inputObject;
+
+      if (verbMatch && objectMatch) return 1;
+      else if (verbMatch) return 0;
+      else return -1;
     }
     function flexibleMatchSingle(expected, input) {
       if (Array.isArray(expected)) {
@@ -201,7 +153,6 @@ body {
       }
     }
 
-    /***** Definizione completa delle stanze *****/
     const rooms = {
       1: {
         id: 1,
@@ -230,10 +181,10 @@ In un angolo, una corda arrotolata che sembra appena uscita da un film western e
           progress: 0,
           hint: "Suggerimento: Gli antichi Egizi avevano una passione per l'ordine... pensa a chi vola alto, chi striscia basso, e chi sta nel mezzo.",
           solved: false,
-          customSuccess: "Un rumore di ingranaggi arrugginiti riempie la stanza. La porta a est vibra, poi si apre con un cigolio che sveglierebbe anche un faraone millenario.  Avete sbloccato il passaggio!  Ora, pronti per la prossima sfida?" ,
+          customSuccess: "Un rumore di ingranaggi arrugginiti riempie la stanza. La porta a est vibra, poi si apre con un cigolio che sveglierebbe anche un faraone millenario.  Avete sbloccato il passaggio!  Ora, pronti per la prossima sfida?",
           successDescription: "Con la sequenza corretta, i simboli si illuminano brevemente di una luce verdognola.  Un meccanismo arrugginito si attiva con un rumore di ferraglia, e la porta a est, con un sussulto, si sblocca, aprendosi quel tanto che basta per farvi passare.  Non esattamente un'apertura trionfale, ma ehi, funziona!"
         },
-        exits: { est: 3, nord: 1 }, // Corretto: aggiunta uscita NORD verso stanza 1 (INGRESSO)
+        exits: { est: 3, nord: 1 },
         lockedExits: { est: true }
       },
       3: {
@@ -241,18 +192,18 @@ In un angolo, una corda arrotolata che sembra appena uscita da un film western e
         title: "LE SABBIE MOBILI - La fuga è appesa a un filo... di corda!",
         description: `Appena mettete piede nella stanza, il terreno scompare sotto i vostri piedi! Sabbie mobili!  State affondando rapidamente, risucchiati da questa trappola insidiosa come un panino nel buco nero della fame di mezzanotte.  La sabbia vi stringe già le gambe, facendovi seriamente dubitare della sanità mentale di chi ha progettato questa piramide.
 
-Non c'è nulla a cui aggrapparsi, solo sabbia viscida e implacabile che vi inghiotte centimetro dopo centimetro.  La corda che avete trovato nella stanza precedente è essenziale per uscire da questa situazione appiccicosa.  Usatela con saggezza se volete raggiungere la porta a nord, altrimenti diventerete parte dell'arredamento (funebre) di questa stanza.`, // Descrizione RIVISTA per essere più diretta
+Non c'è nulla a cui aggrapparsi, solo sabbia viscida e implacabile che vi inghiotte centimetro dopo centimetro.  La corda che avete trovato nella stanza precedente è essenziale per uscire da questa situazione appiccicosa.  Usatela con saggezza se volete raggiungere la porta a nord, altrimenti diventerete parte dell'arredamento (funebre) di questa stanza.`,
         items: [],
         puzzle: {
           type: "single",
           command: ["usa corda", "lancia corda"],
-          hint: "Suggerimento:  Siete nei guai fino al collo (di sabbia).  Avete raccolto una corda nella stanza dei simboli.  Quella corda è la vostra unica speranza. Usatela!", // Hint RIVISTO per essere più diretto
+          hint: "Suggerimento:  Siete nei guai fino al collo (di sabbia).  Avete raccolto una corda nella stanza dei simboli.  Quella corda è la vostra unica speranza. Usatela!",
           solved: false,
           successDescription: "Con un ultimo sforzo disperato, lanciate la corda verso l'alto, sperando in un miracolo (o almeno in un appiglio).  E il miracolo accade!  La corda si avvolge saldamente attorno a una trave di legno nascosta nell'ombra del soffitto.  Stringendo i denti e aggrappandovi alla corda come se fosse l'ultimo biglietto per l'ascensore che porta fuori dall'inferno, vi tirate fuori dalle sabbie mobili, esausti ma vittoriosi.  La porta a nord è ora libera, e voi...  beh, voi avete decisamente bisogno di una doccia (e forse di un terapista).",
           requiresItem: "corda",
           removeItem: true
         },
-        exits: { nord: 4, sud: 2 }, // Corretto: aggiunta uscita SUD verso stanza 2 (CAMERA DEI SIMBOLI)
+        exits: { nord: 4, sud: 2 },
         lockedExits: { nord: true }
       },
       4: {
@@ -330,9 +281,9 @@ Apro mondi senza chiave, e chiudo ere con un sospiro.
 Cosa sono?"
 
 Le uscite? A sud, se preferite tornare al caos del Corridoio delle Frecce, e a est, se pensate di avere la risposta all'indovinello e volete tentare la fortuna.`,
-        items: ["anfora"], // L'anfora è presente nella stanza
+        items: ["anfora"],
         puzzle: {
-          riddle: { // Puzzle per l'indovinello
+          riddle: {
             type: "single",
             command: ["rispondo libro", "libro"],
             hint: "Suggerimento: L'indovinello descrive qualcosa che 'racconta storie', 'viaggia nel tempo e nello spazio' e 'apre mondi'.  In questa stanza siete circondati da... cosa?",
@@ -342,22 +293,20 @@ Le uscite? A sud, se preferite tornare al caos del Corridoio delle Frecce, e a e
               "Sembra che l'indovinello del libro sia risolto. Ora, cosa fare?"
             ],
           },
-          amphora: { // Puzzle per l'anfora, disponibile solo dopo aver risolto l'indovinello
+          amphora: {
             type: "single",
             command: "rompi anfora",
-            requiresPuzzleSolved: "riddle", // Dipende dalla risoluzione del puzzle 'riddle'
+            requiresPuzzleSolved: "riddle",
             hint: "Suggerimento: Il libro magico vi ha suggerito di 'cercare la chiave'. Avete notato quell'anfora diversa dalle altre? Forse è il caso di esaminarla meglio, o... di fare qualcosa di più 'drastico'?",
             solved: false,
             reward: "chiave egizia",
             customSuccess: [
               "Seguendo il consiglio del libro magico, notate l'anfora defilata sullo scaffale.  Sembra diversa dalle altre...",
-              "Con un gesto deciso, **rompete l'anfora**.  Frammenti di terracotta volano ovunque, e tra i cocci, ecco brillare una **chiave egizia** finemente lavorata!  L'avete raccolta!" ,
+              "Con un gesto deciso, **rompete l'anfora**.  Frammenti di terracotta volano ovunque, e tra i cocci, ecco brillare una **chiave egizia** finemente lavorata!  L'avete raccolta!",
               "Contemporaneamente, il muro est vibra, e una sezione di parete si sposta lateralmente, rivelando un'apertura buia.  Il libro e l'anfora vi hanno aperto una nuova via!  Evidentemente, la conoscenza e un po' di forza bruta sono un'ottima combinazione..."
             ],
           },
-          solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
-            return this.riddle.solved && this.amphora.solved;
-          }
+          solved: function() { return this.riddle.solved && this.amphora.solved; }
         },
         exits: { sud: 6, est: 8 },
         lockedExits: { est: true }
@@ -378,7 +327,7 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
           solved: false,
           successDescription: "Avvicinandovi alla statua di Osiride, notate la cavità vuota nella sua mano.  Esitando un attimo (non si sa mai se le statue mordono), inserite lo scettro nella mano della divinità.  Un lampo di luce dorata emana dalla statua, che sembra rilassarsi leggermente, come dopo un massaggio decontratturante.  Un sonoro 'click' proviene dal muro nord, e la porta bloccata si spalanca con un'aria quasi sollevata.  Osiride vi ringrazia... a modo suo, ovviamente.",
           requiresItem: "scettro",
-          removeItem: true // Lo scettro viene rimosso dopo l'uso
+          removeItem: true
         },
         exits: { ovest: 7, nord: 9 },
         lockedExits: { nord: true }
@@ -389,26 +338,24 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
         description: `Siete entrati nella maestosa Camera del Giudizio.  Al centro, una grande PESA dorata domina la scena. Anubi, in statua, osserva severo. Un cartello: "Vietato toccare la bilancia...".  Una voce risuona: 'Prima di pesare, risolvi il mio enigma, mortale!': 'Sono custode silenzioso, misuro senza toccare, decido il valore, ma non posso giudicare. Cosa sono?' Le uscite? A sud, per tornare dalle statue, e nord, ancora sbarrata.`,
         items: [],
         puzzle: {
-          riddle: { // Puzzle per l'indovinello della bilancia
+          riddle: {
             type: "single",
             command: ["rispondo bilancia", "rispondo balance", "bilancia", "balance"],
             hint: "Suggerimento: L'enigma parla di qualcosa che 'misura senza toccare' e 'decide il valore'.  Guardatevi intorno in questa stanza... cosa potrebbe essere?",
             solved: false,
             successDescription: "Appena pronunciate la risposta all'enigma - 'BILANCIA!' -  la voce spettrale tace.  Sembra che Anubi sia soddisfatto della vostra risposta.  Ora potete avvicinarvi alla bilancia e fare ciò che è necessario.",
           },
-          weighing: { // Puzzle per pesare l'amuleto, disponibile solo dopo aver risolto l'indovinello
+          weighing: {
             type: "single",
             command: "pesa amuleto",
-            requiresPuzzleSolved: "riddle", // Dipende dalla risoluzione del puzzle 'riddle'
+            requiresPuzzleSolved: "riddle",
             requiresItem: "amuleto",
             removeItem: true,
             hint: "Suggerimento: Avete risolto l'indovinello della bilancia. Ora... cosa dovreste fare con quell'amuleto che avete nell'inventario e quella bilancia gigante al centro della stanza?",
             solved: false,
             successDescription: "Con l'amuleto in mano, vi avvicinate alla bilancia dorata.  Con un gesto solenne, deponete l'amuleto su uno dei piatti.  La bilancia oscilla leggermente, poi si ferma, perfettamente in equilibrio.  Un raggio di luce dorata avvolge la bilancia, e un sonoro 'click' proviene dalla porta a nord, che si spalanca, rivelando il passaggio.  Anubi annuisce impercettibilmente, segno che avete superato anche questa prova.  La giustizia è stata fatta... o almeno pesata correttamente!"
           },
-          solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
-            return this.riddle.solved && this.weighing.solved;
-          }
+          solved: function() { return this.riddle.solved && this.weighing.solved; }
         },
         exits: { sud: 8, nord: 10 },
         lockedExits: { nord: true }
@@ -421,7 +368,7 @@ Le uscite? A ovest, se volete tornare alla biblioteca a cercare lo scettro tra i
 Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ciò che resta quando tutto è perduto, l'ultimo respiro prima del silenzio eterno. Cosa sono?'.  Accanto, una statua di Anubis con cavità nel petto.  Non ci sono porte visibili, a parte quella a sud.`,
         items: [],
         puzzle: {
-          riddle1: { // Puzzle per il primo indovinello ("ombra")
+          riddle1: {
             type: "single",
             command: ["rispondo ombra", "rispondo memoria", "ombra", "memoria"],
             hint: "Suggerimento:  L'enigma parla di 'ciò che resta quando tutto è perduto' e 'l'ultimo respiro prima del silenzio'.  Cosa svanisce con la luce?",
@@ -432,10 +379,10 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
               "Sembra che il primo enigma sia risolto.  Ora c'è un secondo enigma... e il sarcofago è aperto!"
             ],
           },
-          riddle2: { // Puzzle per il secondo indovinello ("uscita")
+          riddle2: {
             type: "single",
             command: ["rispondo uscita", "rispondo passaggio", "rispondo libertà", "uscita", "passaggio", "libertà"],
-            requiresPuzzleSolved: "riddle1", // Dipende dalla risoluzione del puzzle 'riddle1'
+            requiresPuzzleSolved: "riddle1",
             hint: "Suggerimento: Il secondo indovinello parla di qualcosa che 'conduce via', 'dona luce nuova' e 'l'assenza di muri'.  Pensate all'obiettivo finale in un labirinto...",
             solved: false,
             customSuccess: [
@@ -443,29 +390,26 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
               "Sembra che anche il secondo enigma sia risolto! Ora cosa bisogna fare?"
             ],
           },
-          useKey: { // Puzzle per usare la chiave egizia
+          useKey: {
             type: "single",
             command: "usa chiave",
-            requiresPuzzleSolved: "riddle2", // Dipende dalla risoluzione del puzzle 'riddle2'
+            requiresPuzzleSolved: "riddle2",
             requiresItem: "chiave",
             removeItem: true,
-            hint: "Suggerimento:  Avete una chiave egizia... e un raggio di luce indica un punto sul muro nord. Forse la chiave va usata lì? O forse... osservate attentamente la statua di Anubis...", // Hint modificato
+            hint: "Suggerimento:  Avete una chiave egizia... e un raggio di luce indica un punto sul muro nord. Forse la chiave va usata lì? O forse... osservate attentamente la statua di Anubis...",
             solved: false,
             customSuccess: [
-              "Prendete la chiave egizia dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...", // Modificato per suggerire l'uso della chiave
+              "Prendete la chiave egizia dall'inventario e inseritela...  ma dove?  Osservate attentamente la statua di Anubis...",
               "Inserite la chiave egizia nella cavità nel petto della statua di Anubis.  Un boato sordo, e una sezione del muro scorre lateralmente, rivelando un passaggio segreto! Adesso il comando PASSAGGIO è la chiave"
             ],
           },
-          solved: function() { // Funzione per verificare se il puzzle della stanza è completamente risolto
-            return this.riddle1.solved && this.riddle2.solved && this.useKey.solved;
-          }
+          solved: function() { return this.riddle1.solved && this.riddle2.solved && this.useKey.solved; }
         },
         exits: { sud: 9, passaggio: "win" },
         lockedExits: { passaggio: true }
       }
     };
 
-    /***** Funzioni per aggiornare la descrizione e il cambio stanza *****/
     function setDescription(htmlContent) {
       document.getElementById("game-description").innerHTML = htmlContent;
     }
@@ -482,7 +426,6 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       showCurrentRoom();
     }
 
-    /***** Gestione degli errori *****/
     function handleError(hint) {
       gameState.lives--;
       addStatus("Mossa sbagliata! Avete perso una vita.", "system-message");
@@ -493,17 +436,15 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       if (gameState.lives <= 0) gameOver();
     }
     function gameOver() {
-      addStatus("GAME OVER - Avete esaurito le vite!  Probabilmente nella vita reale siete più bravi.", "system-message");
-      addStatus("Volete riprovare? (S/N)  Oppure preferite andare a piangere in un angolo?", "system-message");
+      addStatus("GAME OVER - Avete esaurito le vite! Inserite 'S' per riprovare o 'N' per uscire.", "system-message");
       gameState.currentRoom = "gameover";
     }
     function winGame() {
       addStatus("CONGRATULAZIONI! Avete completato il Mistero della Piramide Perduta con " + gameState.lives + " vite rimaste!  Siete dei veri Indiana Jones.", "system-message");
-      addStatus("Volete rigiocare? (S/N)  Attenti che la fortuna non dura per sempre!", "system-message");
+      addStatus("Volete rigiocare? Inserite 'S' per riprovare o 'N' per uscire.", "system-message");
       gameState.currentRoom = "gameover";
     }
 
-    /***** Gestione del comando per prendere un oggetto *****/
     function handleItemPickup(command) {
       let itemPart = command.slice(7).trim();
       if (itemPart.split(" ").length !== 1) {
@@ -524,25 +465,22 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       }
     }
 
-    /***** Rimuove un oggetto dall'inventario *****/
     function removeFromInventory(item) {
       gameState.inventory = gameState.inventory.filter(i => i !== item);
     }
 
-    /***** Gestione dei comandi puzzle *****/
     function processPuzzleCommand(room, command) {
-      if (!room.puzzle) return false; // Se non c'è puzzle, esci subito
+      if (!room.puzzle) return false;
 
-      // STANZA 9 - CAMERA DEL GIUDIZIO
       if (gameState.currentRoom === 9) {
         const riddlePuzzle = room.puzzle.riddle;
         const weighingPuzzle = room.puzzle.weighing;
 
-        if (riddlePuzzle && !riddlePuzzle.solved) { // Puzzle dell'indovinello della bilancia
+        if (riddlePuzzle && !riddlePuzzle.solved) {
           let result = flexibleMatchSingle(riddlePuzzle.command, command);
           if (result === 1) {
             riddlePuzzle.solved = true;
-            gameState.judgmentRiddleSolved = true; // Imposta lo stato globale
+            gameState.judgmentRiddleSolved = true;
             addStatus(riddlePuzzle.successDescription, "enigma-message");
             return true;
           } else if (result === -1) {
@@ -551,23 +489,21 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
           }
         }
 
-        if (weighingPuzzle && !weighingPuzzle.solved && gameState.judgmentRiddleSolved) { // Puzzle del pesare l'amuleto, SOLO se l'indovinello è risolto
+        if (weighingPuzzle && !weighingPuzzle.solved && gameState.judgmentRiddleSolved) {
           let result = flexibleMatchSingle(weighingPuzzle.command, command);
           if (result === 1) {
             weighingPuzzle.solved = true;
-            if (weighingPuzzle.removeItem) {
-               if (weighingPuzzle.requiresItem) {
-                  removeFromInventory(weighingPuzzle.requiresItem);
-               }
+            if (weighingPuzzle.removeItem && weighingPuzzle.requiresItem) {
+              removeFromInventory(weighingPuzzle.requiresItem);
             }
             for (let dir in room.lockedExits) room.lockedExits[dir] = false;
             if (weighingPuzzle.successDescription || weighingPuzzle.customSuccess) {
-               let descriptions = weighingPuzzle.successDescription || weighingPuzzle.customSuccess;
-               if (Array.isArray(descriptions)) {
-                  descriptions.forEach(desc => addStatus(desc, "enigma-message"));
-               } else {
-                  addStatus(descriptions, "enigma-message");
-               }
+              let descriptions = weighingPuzzle.successDescription || weighingPuzzle.customSuccess;
+              if (Array.isArray(descriptions)) {
+                descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+              } else {
+                addStatus(descriptions, "enigma-message");
+              }
             }
             return true;
           } else if (result === -1) {
@@ -577,18 +513,15 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         }
       }
 
-
-      // STANZA 7 - BIBLIOTECA
       if (gameState.currentRoom === 7) {
-        // ... (rest of stanza 7 puzzle logic - no changes needed here) ...
         const riddlePuzzle = room.puzzle.riddle;
         const amphoraPuzzle = room.puzzle.amphora;
 
-        if (riddlePuzzle && !riddlePuzzle.solved) { // Puzzle dell'indovinello del libro
+        if (riddlePuzzle && !riddlePuzzle.solved) {
           let result = flexibleMatchSingle(riddlePuzzle.command, command);
           if (result === 1) {
             riddlePuzzle.solved = true;
-            gameState.libraryRiddleSolved = true; // Imposta lo stato globale
+            gameState.libraryRiddleSolved = true;
             addStatus(riddlePuzzle.customSuccess[0], "enigma-message");
             addStatus(riddlePuzzle.customSuccess[1], "enigma-message");
             return true;
@@ -598,14 +531,12 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
           }
         }
 
-        if (amphoraPuzzle && !amphoraPuzzle.solved && gameState.libraryRiddleSolved && command === "rompi anfora") { // Puzzle dell'anfora, SOLO se l'indovinello è risolto
+        if (amphoraPuzzle && !amphoraPuzzle.solved && gameState.libraryRiddleSolved && command === "rompi anfora") {
           let result = flexibleMatchSingle(amphoraPuzzle.command, command);
           if (result === 1) {
             amphoraPuzzle.solved = true;
-            if (amphoraPuzzle.removeItem) {
-               if (amphoraPuzzle.requiresItem) {
-                  removeFromInventory(amphoraPuzzle.requiresItem);
-               }
+            if (amphoraPuzzle.removeItem && amphoraPuzzle.requiresItem) {
+              removeFromInventory(amphoraPuzzle.requiresItem);
             }
             if (amphoraPuzzle.reward && !gameState.inventory.includes(amphoraPuzzle.reward)) {
               gameState.inventory.push(amphoraPuzzle.reward);
@@ -613,12 +544,12 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
             }
             for (let dir in room.lockedExits) room.lockedExits[dir] = false;
             if (amphoraPuzzle.successDescription || amphoraPuzzle.customSuccess) {
-               let descriptions = amphoraPuzzle.successDescription || amphoraPuzzle.customSuccess;
-               if (Array.isArray(descriptions)) {
-                  descriptions.forEach(desc => addStatus(desc, "enigma-message"));
-               } else {
-                  addStatus(descriptions, "enigma-message");
-               }
+              let descriptions = amphoraPuzzle.successDescription || amphoraPuzzle.customSuccess;
+              if (Array.isArray(descriptions)) {
+                descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+              } else {
+                addStatus(descriptions, "enigma-message");
+              }
             }
             return true;
           } else if (result === -1) {
@@ -628,21 +559,19 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         }
       }
 
-      // STANZA 10 - TOMBA
       if (gameState.currentRoom === 10) {
-        // ... (rest of stanza 10 puzzle logic - no changes needed here) ...
         const riddle1Puzzle = room.puzzle.riddle1;
         const riddle2Puzzle = room.puzzle.riddle2;
         const useKeyPuzzle = room.puzzle.useKey;
 
-        if (riddle1Puzzle && !riddle1Puzzle.solved) { // Primo indovinello ("ombra")
+        if (riddle1Puzzle && !riddle1Puzzle.solved) {
           let result = flexibleMatchSingle(riddle1Puzzle.command, command);
           if (result === 1) {
             riddle1Puzzle.solved = true;
             gameState.tombRiddle1Solved = true;
             addStatus(riddle1Puzzle.customSuccess[0], "enigma-message");
             addStatus(riddle1Puzzle.customSuccess[1], "enigma-message");
-            addStatus(riddle1Puzzle.customSuccess[2], "enigma-message"); // Messaggio aggiuntivo
+            addStatus(riddle1Puzzle.customSuccess[2], "enigma-message");
             return true;
           } else if (result === -1) {
             handleError(riddle1Puzzle.hint);
@@ -650,13 +579,13 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
           }
         }
 
-        if (riddle2Puzzle && !riddle2Puzzle.solved && gameState.tombRiddle1Solved) { // Secondo indovinello ("uscita"), solo dopo il primo
+        if (riddle2Puzzle && !riddle2Puzzle.solved && gameState.tombRiddle1Solved) {
           let result = flexibleMatchSingle(riddle2Puzzle.command, command);
           if (result === 1) {
             riddle2Puzzle.solved = true;
             gameState.tombRiddle2Solved = true;
             addStatus(riddle2Puzzle.customSuccess[0], "enigma-message");
-            addStatus(riddle2Puzzle.customSuccess[1], "enigma-message"); // Messaggio aggiuntivo
+            addStatus(riddle2Puzzle.customSuccess[1], "enigma-message");
             return true;
           } else if (result === -1) {
             handleError(riddle2Puzzle.hint);
@@ -664,23 +593,21 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
           }
         }
 
-        if (useKeyPuzzle && !useKeyPuzzle.solved && gameState.tombRiddle2Solved) { // Usa chiave, solo dopo il secondo indovinello
+        if (useKeyPuzzle && !useKeyPuzzle.solved && gameState.tombRiddle2Solved) {
           let result = flexibleMatchSingle(useKeyPuzzle.command, command);
           if (result === 1) {
             useKeyPuzzle.solved = true;
-            if (useKeyPuzzle.removeItem) {
-               if (useKeyPuzzle.requiresItem) {
-                  removeFromInventory(useKeyPuzzle.requiresItem);
-               }
+            if (useKeyPuzzle.removeItem && useKeyPuzzle.requiresItem) {
+              removeFromInventory(useKeyPuzzle.requiresItem);
             }
             for (let dir in room.lockedExits) room.lockedExits[dir] = false;
             if (useKeyPuzzle.successDescription || useKeyPuzzle.customSuccess) {
-               let descriptions = useKeyPuzzle.successDescription || useKeyPuzzle.customSuccess;
-               if (Array.isArray(descriptions)) {
-                  descriptions.forEach(desc => addStatus(desc, "enigma-message"));
-               } else {
-                  addStatus(descriptions, "enigma-message");
-               }
+              let descriptions = useKeyPuzzle.successDescription || useKeyPuzzle.customSuccess;
+              if (Array.isArray(descriptions)) {
+                descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+              } else {
+                addStatus(descriptions, "enigma-message");
+              }
             }
             return true;
           } else if (result === -1) {
@@ -690,16 +617,13 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         }
       }
 
-
-      // Processa i puzzle "single" e "sequence" come prima PER LE ALTRE STANZE (es. stanza 2, 3, 4, 5, 6, 8)
-      if (room.puzzle.type === "single" || room.puzzle.type === "sequence") { // Mantiene la compatibilità per le stanze esistenti
-         return processDefaultPuzzleCommand(room, command); // Usa la funzione separata per la logica precedente
+      if (room.puzzle.type === "single" || room.puzzle.type === "sequence") {
+        return processDefaultPuzzleCommand(room, command);
       }
 
       return false;
     }
 
-    // Funzione separata per processare i puzzle "single" e "sequence" standard (precedente logica)
     function processDefaultPuzzleCommand(room, command) {
       if (!room.puzzle || room.puzzle.solved) return false;
       if (room.puzzle.type === "single") {
@@ -713,10 +637,8 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
 
         let result = flexibleMatchSingle(room.puzzle.command, command);
         if (result === 1) {
-          if (room.puzzle.removeItem) {
-             if (room.puzzle.requiresItem) {
-                removeFromInventory(room.puzzle.requiresItem);
-             }
+          if (room.puzzle.removeItem && room.puzzle.requiresItem) {
+            removeFromInventory(room.puzzle.requiresItem);
           }
           room.puzzle.solved = true;
           if (gameState.currentRoom === 2 && room.puzzle.customSuccess) {
@@ -730,23 +652,18 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
           }
           for (let dir in room.lockedExits) room.lockedExits[dir] = false;
           if (room.puzzle.successDescription || room.puzzle.customSuccess) {
-             let descriptions = room.puzzle.successDescription || room.puzzle.customSuccess;
-             if (Array.isArray(descriptions)) {
-                descriptions.forEach(desc => addStatus(desc, "enigma-message"));
-             } else {
-                addStatus(descriptions, "enigma-message");
-             }
+            let descriptions = room.puzzle.successDescription || room.puzzle.customSuccess;
+            if (Array.isArray(descriptions)) {
+              descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+            } else {
+              addStatus(descriptions, "enigma-message");
+            }
           }
           return true;
         } else if (result === 0) {
           addStatus("Non conosco il comando. Forse dovete parlare in egizio antico?", "system-message");
           return true;
         } else {
-          if (room.puzzle.type === "sequence") {
-            addStatus("Sequenza interrotta! Ricominciate dall'inizio. Avete perso una vita perché avete sbagliato l'ordine.", "system-message");
-          } else {
-            handleError(room.puzzle.hint);
-          }
           handleError(room.puzzle.hint);
           return true;
         }
@@ -754,59 +671,40 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
         let expected = room.puzzle.commands[room.puzzle.progress];
         let result = flexibleMatchSingle(expected, command);
         if (result === 1) {
-          if (gameState.currentRoom === 3 && command.includes("corda")) removeFromInventory("corda"); // Quelli specifici per stanza rimangono, per compatibilità - ma ora c'è il sistema più generale sopra
-          if (gameState.currentRoom === 4 && command.includes("specchio")) removeFromInventory("specchio");
-          if (gameState.currentRoom === 5 && command.includes("moneta")) removeFromInventory("moneta");
-          if (gameState.currentRoom === 9 && command.includes("amuleto")) removeFromInventory("amuleto");
-          if (gameState.currentRoom === 10 && command.includes("chiave")) removeFromInventory("chiave"); // Corretto: rimuove chiave egizia
-          if (gameState.currentRoom === 7 && room.puzzle.progress === 1 && command.includes("rompi anfora")) { // Se si rompe l'anfora nella stanza 7
-             const room7 = rooms[7];
-             if (room7.items && room7.items.includes("anfora")) {
-                room7.items = room7.items.filter(item => item !== "anfora"); // Rimuove l'anfora dalla stanza
-             }
-          }
-
-
           room.puzzle.progress++;
           if (room.puzzle.progress === room.puzzle.commands.length) {
             room.puzzle.solved = true;
             if (gameState.currentRoom === 2 && room.puzzle.customSuccess) {
               addStatus(room.puzzle.customSuccess, "enigma-message");
             } else {
-              addStatus("Enigma risolto!  Siete sulla buona strada per diventare un eroe (o quasi).", "system-message");
-            }
-            if (room.puzzle.reward && !gameState.inventory.includes(room.puzzle.reward)) {
-              gameState.inventory.push(room.puzzle.reward);
-              addStatus(`Avete ottenuto: ${room.puzzle.reward}.  Collezionateli tutti! (No, non proprio).`, "system-message");
+              addStatus("Enigma risolto! Siete sulla buona strada per diventare un eroe (o quasi).", "system-message");
             }
             for (let dir in room.lockedExits) room.lockedExits[dir] = false;
             if (room.puzzle.successDescription || room.puzzle.customSuccess) {
               let descriptions = room.puzzle.successDescription || room.puzzle.customSuccess;
               if (Array.isArray(descriptions)) {
-                 descriptions.forEach(desc => addStatus(desc, "enigma-message"));
+                descriptions.forEach(desc => addStatus(desc, "enigma-message"));
               } else {
-                 addStatus(descriptions, "enigma-message");
+                addStatus(descriptions, "enigma-message");
               }
             }
           } else {
-            addStatus("Comando accettato.  Continuate così, siete quasi arrivati alla fine... della sequenza, almeno.", "system-message");
+            addStatus("Comando accettato. Continuate così, siete quasi arrivati alla fine... della sequenza, almeno.", "system-message");
           }
           return true;
         } else if (result === 0) {
-          addStatus("Non conosco il comando.  Riformulate la domanda, magari?", "system-message");
+          room.puzzle.progress = 0;
+          addStatus("Sequenza interrotta! Avete premuto il simbolo sbagliato. Ricominciate dall'inizio.", "system-message");
+          handleError(room.puzzle.hint);
           return true;
         } else {
-          room.puzzle.progress = 0;
-          addStatus("Sequenza interrotta! Ricominciate dall'inizio. Avete perso una vita perché avete sbagliato l'ordine.", "system-message");
-          handleError(room.puzzle.hint);
+          addStatus("Comando non riconosciuto per questo enigma.", "system-message");
           return true;
         }
       }
       return false;
     }
 
-
-    /***** Gestione del movimento *****/
     function handleMovement(direction) {
       const room = rooms[gameState.currentRoom];
       if (!room.exits.hasOwnProperty(direction)) {
@@ -824,39 +722,42 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       }
     }
 
-    /***** Processa il comando dell'utente *****/
     function processCommand(input) {
       const command = input.trim().toLowerCase();
+
+      if (gameState.currentRoom === "gameover") {
+        const cleanedCommand = command.trim().toLowerCase();
+        if (cleanedCommand === "s") {
+          restartGame();
+        } else if (cleanedCommand === "n") {
+          addStatus("Grazie per aver giocato! Tornate presto... se vi va, eh.", "system-message");
+          document.getElementById("game-input").disabled = true;
+        } else {
+          addStatus("Inserite S per riprovare o N per uscire. Non fate i difficili.", "system-message");
+        }
+        return;
+      }
+
       if (gameState.currentRoom === 0) {
         goToRoom(1);
         return;
       }
-      if (gameState.currentRoom === "gameover") {
-        if (command === "s") {
-          restartGame();
-        } else if (command === "n") {
-          addStatus("Grazie per aver giocato!  Tornate presto...  se vi va, eh.", "system-message");
-          document.getElementById("game-input").disabled = true;
-        } else {
-          addStatus("Inserite S per riprovare o N per uscire.  Non fate i difficili.", "system-message");
-        }
-        return;
-      }
-      if (["nord", "sud", "est", "ovest", "passaggio"].includes(command)) {
+
+      if (typeof gameState.currentRoom === 'number' && ["nord", "sud", "est", "ovest", "passaggio"].includes(command)) {
         handleMovement(command);
         return;
       }
+
       if (command.startsWith("prendi ")) {
         handleItemPickup(command);
         return;
       }
 
-      // Processa il comando per i puzzle (gestione differenziata per stanze 7, 9 e 10)
       if (rooms[gameState.currentRoom].puzzle) {
         if (processPuzzleCommand(rooms[gameState.currentRoom], command)) return;
       }
 
-      addStatus("Comando non riconosciuto. Forse volevate dire 'apriti sesamo'?  No, qui non funziona.", "system-message");
+      addStatus("Comando non riconosciuto. Forse volevate dire 'apriti sesamo'? No, qui non funziona.", "system-message");
     }
 
     function restartGame() {
@@ -864,34 +765,31 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       gameState.lives = 3;
       gameState.inventory = [];
       gameState.errorOccurred = false;
-      gameState.libraryRiddleSolved = false; // Resetta stato biblioteca
-      gameState.tombRiddle1Solved = false; // Resetta stati tomba
+      gameState.libraryRiddleSolved = false;
+      gameState.tombRiddle1Solved = false;
       gameState.tombRiddle2Solved = false;
       gameState.tombSarcophagusOpened = false;
-      gameState.judgmentRiddleSolved = false; // Resetta stato camera giudizio
-
+      gameState.judgmentRiddleSolved = false;
 
       for (let id in rooms) {
         const room = rooms[id];
         if (room.puzzle) {
-          if (typeof room.puzzle.solved === 'function') { // Per stanze 7, 9 e 10 con puzzle multipli e funzione 'solved'
-             room.puzzle.riddle.solved = false; // Resetta riddle stanza 7 & 9
-             if (room.puzzle.weighing) room.puzzle.weighing.solved = false; // se c'è anche il peso (stanza 9)
-             if (room.puzzle.amphora) room.puzzle.amphora.solved = false; // se c'è anche l'anfora (stanza 7)
-             if (room.puzzle.riddle1) room.puzzle.riddle1.solved = false; // Resetta riddle1 stanza 10
-             if (room.puzzle.riddle2) room.puzzle.riddle2.solved = false; // Resetta riddle2 stanza 10
-             if (room.puzzle.useKey) room.puzzle.useKey.solved = false;   // Resetta useKey stanza 10
-          } else { // Per le altre stanze con puzzle "single" o "sequence" standard
-             room.puzzle.solved = false;
-             if (room.puzzle.type === "sequence") room.puzzle.progress = 0;
+          if (typeof room.puzzle.solved === 'function') {
+            room.puzzle.riddle.solved = false;
+            if (room.puzzle.weighing) room.puzzle.weighing.solved = false;
+            if (room.puzzle.amphora) room.puzzle.amphora.solved = false;
+            if (room.puzzle.riddle1) room.puzzle.riddle1.solved = false;
+            if (room.puzzle.riddle2) room.puzzle.riddle2.solved = false;
+            if (room.puzzle.useKey) room.puzzle.useKey.solved = false;
+          } else {
+            room.puzzle.solved = false;
+            if (room.puzzle.type === "sequence") room.puzzle.progress = 0;
           }
         }
       }
       showCurrentRoom();
     }
 
-
-    /***** Gestione dell'input *****/
     document.getElementById("game-input").addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
         const inputField = document.getElementById("game-input");
@@ -902,7 +800,6 @@ Un sarcofago dorato e pacchiano troneggia al centro. Un enigma inciso: 'Sono ci�
       }
     });
 
-    /***** Schermata introduttiva completa *****/
     function showIntro() {
       const introText = `<div class="room-title" style="font-family: 'Cinzel Decorative', serif;">IL MISTERO DELLA PIRAMIDE PERDUTA</div>
 Benvenuti, aspiranti archeologi da strapazzo! Avete vinto un viaggio premio in Egitto, partecipando al famigerato concorso radiofonico "Piramidi & Panini", l'unico programma che va in onda alle 4 del mattino e che, realisticamente, ascoltano solo i vostri gatti.
@@ -924,7 +821,6 @@ Premete un tasto qualsiasi (ma che sia un tasto vero, non il mouse!) per iniziar
       clearStatus();
     }
 
-    /***** Avvio del gioco *****/
     showIntro();
   </script>
 </body>
